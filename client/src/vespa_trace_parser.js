@@ -1,3 +1,7 @@
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) Matti Pehrs. All rights reserved.
+ * Licensed under the MIT License. See LICENSE in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
 
 const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 
