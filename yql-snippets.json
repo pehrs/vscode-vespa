@@ -1,0 +1,45 @@
+{
+	"simple-query": {
+		"prefix": "simple-yql-query",
+		"body": [
+			"{",
+			"    \"yql\": \"select * from msmarco where true limit 10\"",
+			"}"
+		],
+		"description": "Simple QuYQLery Sample"
+	},
+	"full-query": {
+		"prefix": "full-yql-query",
+		"body": [
+			"{",
+			"    \"yql\": \"select * from msmarco where true limit 100\",",
+			"    \"offset\": 5,",
+			"    \"ranking\": {",
+			"        \"matchPhase\": {",
+			"            \"ascending\": true,",
+			"            \"maxHits\": 15",
+			"        }",
+			"    },",
+			"    \"presentation\" : {",
+			"        \"bolding\": false,",
+			"        \"format\": \"json\"",
+			"    },",
+			"    \"trace\": {",
+			"      \"level\": 5,",
+			"      \"timestamps\": true",
+			"    }",
+			"}"
+		],
+		"description": "Full YQL Sample including tracing"
+	},
+	"trace": {
+		"prefix": "yql trace",
+		"body": [
+			"\"trace\": {",
+			"  \"level\": 5,",
+			"  \"timestamps\": true",
+			"}"
+		],
+		"description": "Add YQL trace."
+	}
+}

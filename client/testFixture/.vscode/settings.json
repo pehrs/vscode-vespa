@@ -1,0 +1,4 @@
+{
+    "vespaYql.showWelcome": false,
+    "vespaYql.zipkinEndpoint": "http://localhost:9411"
+}

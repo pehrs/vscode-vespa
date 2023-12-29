@@ -1,0 +1,158 @@
+{
+  "name": "vscode-vespa",
+  "displayName": "vscode-vespa",
+  "description": "Vespa AI Extension",
+  "version": "1.0.0",
+  "publisher": "pehrs.com",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "icon": "media/vespa.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pehrs/vscode-vespa.git"
+  },
+  "categories": [
+    "Formatters",
+    "Snippets",
+    "Language Packs",
+    "Visualization",
+    "Other"
+  ],
+  "pricing": "Free",
+  "activationEvents": [
+    "onLanguage:yql"
+  ],
+  "main": "./client/out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-vespa.runQuery",
+        "title": "Run Vespa YQL Query",
+        "icon": "$(play)"
+      },     
+      {
+        "command": "vscode-vespa.format",
+        "title": "Format YQL.",
+        "icon": "$(code)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "vscode-vespa.runQuery",
+        "key": "ctrl+enter",
+        "mac": "cmd+enter"
+      },
+      {
+        "command": "vscode-vespa.format",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift-i"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.runQuery",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.format",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.runQuery",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.format",
+          "group": "navigation"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "yql",
+        "aliases": [
+          "yql"
+        ],
+        "extensions": [
+          ".yql"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "yql",
+        "scopeName": "source.json",
+        "path": "./syntaxes/json.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "yql",
+        "path": "./yql-snippets.json"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Example configuration",
+      "properties": {
+        "vespaYql.configEndpoint": {
+          "scope": "resource",
+          "type": "string",
+          "default": "http://127.0.0.1:19071",
+          "description": "Endpoint for Vespa Config Server."
+        },
+        "vespaYql.queryEndpoint": {
+          "scope": "resource",
+          "type": "string",
+          "default": "http://127.0.0.1:8080/search",
+          "description": "Endpoint for Vespa YQL Queries."
+        },
+        "vespaYql.zipkinEndpoint": {
+          "scope": "resource",
+          "type": "string",
+          "default": "http://127.0.0.1:9411",
+          "description": "Endpoint for Zipkin traces."
+        },
+        "vespaYql.queryTimeout": {
+          "scope": "resource",
+          "type": "string",
+          "default": "10s",
+          "description": "Timeout for Vespa YQL Queries."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "test": "sh ./scripts/e2e.sh"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^18.14.6",
+    "@types/vscode": "^1.85.0",
+    "@types/vscode-webview": "^1.57.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.56.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "zipkin": "^0.22.0"
+  }
+}
