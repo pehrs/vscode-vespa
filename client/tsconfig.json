@@ -9,5 +9,5 @@
 		"sourceMap": true
 	},
 	"include": ["src"],
-	"exclude": ["node_modules", ".vscode-test", "vespa_trace_parser"]
+	"exclude": ["node_modules", ".vscode-test"]
 }

@@ -76,23 +76,29 @@ function parseProtonTrace(parentSpan, trace, traces, traceIndex) {
   span.kind = "CLIENT";
   span.localEndpoint = new ZipkinEndpoint("proton");
 
-  if (traceIndex < (traces.length - 2)) {
-    span.duration = Math.round(1000.0 * traces[traceIndex + 1].timestamp_ms - timestamp_ms);
+  const tag = trace.tag;
+  if (tag !== undefined) {
+    span.name = tag;
+  }
+  span.tags = {
+    id: span.id,
+    parentId: parentSpan.id,
+    timestamp_ms: timestamp_ms,
+    event: event,
+    tag: tag,
+    // trace_index: traceIndex,
+    // traces_length: traces.length,
+  };
+
+  if (traceIndex < (traces.length - 1)) {
+    span.duration = Math.round(1000.0 * (traces[traceIndex + 1].timestamp_ms - timestamp_ms));
+    // span.tags.next_timestamp_ms = traces[traceIndex + 1].timestamp_ms;
   } else {
     span.duration = 1;
   }
 
   let result = [span];
 
-  const tag = trace.tag;
-  if (tag !== undefined) {
-    span.name = tag;
-  }
-  span.tags = {
-    timestamp_ms: timestamp_ms,
-    event: event,
-    tag: tag,
-  };
   const threads = trace.threads;
   if (threads !== undefined) {
     span.tags.threadsLen = threads.length;
@@ -295,6 +301,7 @@ export function vespaResponse2Zipkin(vespaResponse) {
         const absolute_timestamp = getAbsoluteTimestamp(spans, span.parentId);
         span.timestamp = Math.round(1000.0 * (absolute_timestamp + timestamp_ms));
         span.tags.absolute_timestamp = absolute_timestamp;
+        span.tags.duration = span.duration;
         span.tags.timestamp = span.timestamp;
         span.tags.timestamp_ms = timestamp_ms;
       }
