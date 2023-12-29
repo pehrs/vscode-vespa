@@ -4,13 +4,14 @@
   "description": "Vespa AI Extension",
   "version": "1.0.0",
   "publisher": "pehrs.com",
-  "engines": {
-    "vscode": "^1.85.0"
-  },
+  "license": "SEE LICENSE IN LICENSE",
   "icon": "media/vespa.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/pehrs/vscode-vespa.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
   },
   "categories": [
     "Formatters",
