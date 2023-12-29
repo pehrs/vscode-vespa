@@ -1,4 +1,4 @@
-# vscode-vespa README
+# vscode-vespa - Vespa YQL request support for Visual Studio Code
 
 The [VS Code Vespa extension](https://github.com/pehrs/vscode-vespa) provides rich language support for the [Vespa YQL Language](https://docs.vespa.ai/en/query-language.html).
 
