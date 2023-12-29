@@ -3,7 +3,7 @@
   "displayName": "vscode-vespa",
   "description": "Vespa AI Extension",
   "version": "1.0.0",
-  "publisher": "pehrs.com",
+  "publisher": "pehrs-com",
   "license": "SEE LICENSE IN LICENSE",
   "icon": "media/vespa.png",
   "repository": {
@@ -31,7 +31,7 @@
         "command": "vscode-vespa.runQuery",
         "title": "Run Vespa YQL Query",
         "icon": "$(play)"
-      },     
+      },
       {
         "command": "vscode-vespa.format",
         "title": "Format YQL.",
@@ -153,7 +153,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "node-fetch": "^3.3.2",
-    "zipkin": "^0.22.0"
+    "node-fetch": "^3.3.2"
   }
 }

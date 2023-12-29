@@ -10,5 +10,9 @@
     "presentation" : {
         "bolding": false,
         "format": "json"
-    }
+    },
+   "trace": {
+     "level": 5,
+     "timestamps": true
+   }
 }
