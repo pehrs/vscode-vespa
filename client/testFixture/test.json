@@ -1,3 +1,1393 @@
 {
-    "json": "sample"
+  "trace": {
+    "children": [
+      {
+        "message": "Using query profile 'default'"
+      },
+      {
+        "message": "Resolved properties:\ntimeout: 10000 (from request)\nmaxHits: 1000 (from query profile 'default')\n"
+      },
+      {
+        "message": "Invoking chain 'vespa' [com.yahoo.prelude.statistics.StatisticsSearcher@native -> com.yahoo.prelude.querytransform.PhrasingSearcher@vespa -> ... -> federation@native]"
+      },
+      {
+        "children": [
+          {
+            "timestamp": 0,
+            "message": "Invoke searcher 'com.yahoo.prelude.statistics.StatisticsSearcher in native'"
+          },
+          {
+            "timestamp": 0,
+            "message": "Invoke searcher 'com.yahoo.prelude.querytransform.PhrasingSearcher in vespa'"
+          },
+          {
+            "timestamp": 0,
+            "message": "Invoke searcher 'com.yahoo.prelude.searcher.FieldCollapsingSearcher in vespa'"
+          },
+          {
+            "timestamp": 0,
+            "message": "Invoke searcher 'com.yahoo.search.yql.MinimalQueryInserter in vespa'"
+          },
+          {
+            "timestamp": 1,
+            "message": "Query parsed to: Query currently a placeholder, NullItem encountered."
+          },
+          {
+            "timestamp": 1,
+            "message": "YQL+ query parsed: [select title, url from msmarco where true limit 100 timeout 10000]"
+          },
+          {
+            "timestamp": 1,
+            "message": "Invoke searcher 'com.yahoo.search.yql.FieldFilter in vespa'"
+          },
+          {
+            "timestamp": 1,
+            "message": "Invoke searcher 'com.yahoo.prelude.searcher.JuniperSearcher in vespa'"
+          },
+          {
+            "timestamp": 1,
+            "message": "Invoke searcher 'com.yahoo.prelude.searcher.PosSearcher in vespa'"
+          },
+          {
+            "timestamp": 1,
+            "message": "Invoke searcher 'com.yahoo.prelude.semantics.SemanticSearcher in vespa'"
+          },
+          {
+            "timestamp": 1,
+            "message": "Invoke searcher 'com.yahoo.search.grouping.GroupingQueryParser in vespa'"
+          },
+          {
+            "timestamp": 1,
+            "message": "Invoke searcher 'com.yahoo.prelude.searcher.BlendingSearcher in vespa'"
+          },
+          {
+            "timestamp": 1,
+            "message": "Invoke searcher 'com.yahoo.search.querytransform.WeakAndReplacementSearcher in vespa'"
+          },
+          {
+            "timestamp": 1,
+            "message": "Invoke searcher 'federation in native'"
+          },
+          {
+            "timestamp": 1,
+            "message": "Federating to [msmarco]"
+          },
+          {
+            "timestamp": 1,
+            "children": [
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.querytransform.NGramSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.querytransform.DefaultPositionSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.prelude.querytransform.CJKSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.prelude.querytransform.LiteralBoostSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.querytransform.RangeQueryOptimizer in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.querytransform.SortingDegrader in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.searchers.QueryValidator in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.grouping.GroupingValidator in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.querytransform.WandSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.prelude.querytransform.RecallSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.prelude.querytransform.StemmingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Stemming with language=ENGLISH"
+              },
+              {
+                "timestamp": 1,
+                "message": "Stemming: [select title, url from msmarco where true limit 100 timeout 9999]"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.prelude.querytransform.NormalizingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.querytransform.VespaLowercasingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Lowercasing: [select title, url from msmarco where true limit 100 timeout 9999]"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.prelude.searcher.ValidateSortingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.querytransform.BooleanSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.prelude.searcher.ValidatePredicateSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.searchers.ValidateNearestNeighborSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.searchers.ValidateMatchPhaseSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.searchers.ValidateFuzzySearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.grouping.vespa.GroupingExecutor in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.yql.FieldFiller in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.searchers.InputCheckingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.search.searchers.ContainerLatencySearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "Invoke searcher 'com.yahoo.prelude.cluster.ClusterSearcher in msmarco'"
+              },
+              {
+                "timestamp": 1,
+                "message": "sc0.num0 search to dispatch: query=[TRUE] timeout=9999ms offset=0 hits=100 groupingSessionCache=true sessionId=7327e8d5-2558-4214-a61c-d53bac902cce.1704119291271.29.default grouping=0 :  restrict=[msmarco]"
+              },
+              {
+                "timestamp": 1,
+                "message": "Current state of query tree: TRUE"
+              },
+              {
+                "timestamp": 1,
+                "message": "YQL+ representation: select title, url from msmarco where true limit 100 timeout 9999"
+              },
+              {
+                "timestamp": 1,
+                "message": "Dispatching to search node in cluster = dispatcher.msmarco key = 0 hostname = vespa-msmarco path = 0 in group 0 statusIsKnown = true working = true activeDocs = 99621 targetActiveDocs = 99621"
+              },
+              {
+                "timestamp": 4,
+                "message": [
+                  {
+                    "start_time": "2024-01-01 14:28:11.272 UTC",
+                    "traces": [
+                      {
+                        "traces": [
+                          {
+                            "timestamp_ms": 0.097394,
+                            "event": "Start query setup"
+                          },
+                          {
+                            "timestamp_ms": 0.099728,
+                            "event": "Deserialize and build query tree"
+                          },
+                          {
+                            "timestamp_ms": 0.108775,
+                            "event": "Build query execution plan"
+                          },
+                          {
+                            "timestamp_ms": 0.113083,
+                            "event": "Optimize query execution plan"
+                          },
+                          {
+                            "timestamp_ms": 0.119095,
+                            "event": "Perform dictionary lookups and posting lists initialization"
+                          },
+                          {
+                            "timestamp_ms": 0.120137,
+                            "event": "Prepare shared state for multi-threaded rank executors"
+                          },
+                          {
+                            "timestamp_ms": 0.129795,
+                            "event": "Complete query setup"
+                          }
+                        ],
+                        "timestamp_ms": 0.130366,
+                        "tag": "query_setup"
+                      },
+                      {
+                        "timestamp_ms": 2.357043,
+                        "tag": "query_execution",
+                        "threads": [
+                          {
+                            "traces": [
+                              {
+                                "timestamp_ms": 0.142609,
+                                "event": "Start MatchThread::run"
+                              },
+                              {
+                                "timestamp_ms": 0.165743,
+                                "event": "Start match and first phase rank"
+                              },
+                              {
+                                "timestamp_ms": 2.034734,
+                                "event": "Create result set"
+                              },
+                              {
+                                "timestamp_ms": 2.190909,
+                                "event": "Wait for result processing token"
+                              },
+                              {
+                                "timestamp_ms": 2.193404,
+                                "event": "Start result processing"
+                              },
+                              {
+                                "timestamp_ms": 2.352334,
+                                "event": "Start thread merge"
+                              },
+                              {
+                                "timestamp_ms": 2.352494,
+                                "event": "MatchThread::run Done"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "distribution-key": 0,
+                    "document-type": "msmarco",
+                    "duration_ms": 2.370769
+                  }
+                ]
+              },
+              {
+                "timestamp": 4,
+                "message": "sc0.num0 dispatch response: Result (100 of total 99621 hits)"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.prelude.cluster.ClusterSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.searchers.ContainerLatencySearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.searchers.InputCheckingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.yql.FieldFiller in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.grouping.vespa.GroupingExecutor in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.searchers.ValidateFuzzySearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.searchers.ValidateMatchPhaseSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.searchers.ValidateNearestNeighborSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.prelude.searcher.ValidatePredicateSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.querytransform.BooleanSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.prelude.searcher.ValidateSortingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.querytransform.VespaLowercasingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.prelude.querytransform.NormalizingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.prelude.querytransform.StemmingSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.prelude.querytransform.RecallSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.querytransform.WandSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.grouping.GroupingValidator in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.searchers.QueryValidator in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.querytransform.SortingDegrader in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.querytransform.RangeQueryOptimizer in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.prelude.querytransform.LiteralBoostSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.prelude.querytransform.CJKSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.querytransform.DefaultPositionSearcher in msmarco'"
+              },
+              {
+                "timestamp": 4,
+                "message": "Return searcher 'com.yahoo.search.querytransform.NGramSearcher in msmarco'"
+              },
+              {
+                "timestamp": 5,
+                "message": "sc0.num0 fill to dispatch: query=[TRUE] timeout=9999ms offset=0 hits=100 groupingSessionCache=true sessionId=7327e8d5-2558-4214-a61c-d53bac902cce.1704119291271.29.default grouping=0 :  restrict=[msmarco] summary=[null]"
+              },
+              {
+                "timestamp": 5,
+                "message": "Current state of query tree: TRUE"
+              },
+              {
+                "timestamp": 5,
+                "message": "YQL+ representation: select title, url from msmarco where true limit 100 timeout 9999"
+              },
+              {
+                "timestamp": 5,
+                "message": "ProtoBuf: Resending query during document summary fetching"
+              }
+            ]
+          },
+          {
+            "timestamp": 4,
+            "message": "Got 100 hits from source:msmarco"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'federation in native'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.search.querytransform.WeakAndReplacementSearcher in vespa'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.prelude.searcher.BlendingSearcher in vespa'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.search.grouping.GroupingQueryParser in vespa'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.prelude.semantics.SemanticSearcher in vespa'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.prelude.searcher.PosSearcher in vespa'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.prelude.searcher.JuniperSearcher in vespa'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.search.yql.FieldFilter in vespa'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.search.yql.MinimalQueryInserter in vespa'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.prelude.searcher.FieldCollapsingSearcher in vespa'"
+          },
+          {
+            "timestamp": 4,
+            "message": "Return searcher 'com.yahoo.prelude.querytransform.PhrasingSearcher in vespa'"
+          },
+          {
+            "timestamp": 5,
+            "message": "Return searcher 'com.yahoo.prelude.statistics.StatisticsSearcher in native'"
+          },
+          {
+            "timestamp": 5
+          },
+          {
+            "timestamp": 8,
+            "message": "Query time query 'TRUE': 5 ms"
+          },
+          {
+            "timestamp": 8,
+            "message": "Summary fetch time query 'TRUE': 3 ms"
+          },
+          {
+            "timestamp": 8,
+            "message": "Vespa version: 8.277.17"
+          }
+        ]
+      }
+    ]
+  },
+  "root": {
+    "id": "toplevel",
+    "relevance": 1,
+    "fields": {
+      "totalCount": 99621
+    },
+    "coverage": {
+      "coverage": 100,
+      "documents": 99621,
+      "full": true,
+      "nodes": 1,
+      "results": 1,
+      "resultsFull": 1
+    },
+    "children": [
+      {
+        "id": "index:msmarco/0/3c7dcdd9c1da1737d59a933d",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Contact Safe Co Customer Service",
+          "url": "http://www.contactcustomerservicenow.com/contact-safeco-customer-service/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/68e4cde6a8c1ed022d78036a",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Citing Websites in MLA Format",
+          "url": "http://www.youtube.com/watch?v=27De6EnqUzg"
+        }
+      },
+      {
+        "id": "index:msmarco/0/55a9123c87a935aeaabaa26a",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Background",
+          "url": "https://microblog2014.wordpress.com/home-page/gram-stain/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/46ded5f9735f0611a1febe4c",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "List of castles in Germany",
+          "url": "https://en.wikipedia.org/wiki/List_of_castles_in_Germany"
+        }
+      },
+      {
+        "id": "index:msmarco/0/f6ec98690cc6850f89f000ff",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Chantilly",
+          "url": "http://www.areavibes.com/chantilly-va/livability/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/2eeb245c2784ab3de7fb717a",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "The Evaporation Process",
+          "url": "http://caloris.com/evaporation-process/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/a111aaf0f80d24ed24864872",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Veterans Benefits  Burial  Headstone   Plot Compensation",
+          "url": "https://www.njveteransbenefits.com/veterans-benefits-burial-headstone-plot-compensation/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/5e5a931c2f46c94e29baa4fe",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Ramone",
+          "url": "http://carsvideogames.wikia.com/wiki/Ramone"
+        }
+      },
+      {
+        "id": "index:msmarco/0/b79be7b27ffd4156970de3fc",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Dimensions of a Milk Crate",
+          "url": "http://www.dimensionsinfo.com/dimensions-of-a-milk-crate/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/bf82db215501fff6a6262c50",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "https://www.behance.net/gallery/21217251/Free-Brochure-Mock-up"
+        }
+      },
+      {
+        "id": "index:msmarco/0/c4c8db90224192f2630c92c1",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "DCyoungflyâs Girlfriend  msjackyoh Is Bad",
+          "url": "http://www.atlnightspots.com/dcyoungflys-girlfriend-msjackyoh-is-bad/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/c1528bb9498b037d0a053d36",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Dog health danger signs  Excessive thirst can signal dog health problem",
+          "url": "http://www.dogsbestlife.com/home-page/excessive-thirst-dog-health-problems/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/e8bf933aa07e098f10034259",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "wafer",
+          "url": "http://www.thefreedictionary.com/wafer"
+        }
+      },
+      {
+        "id": "index:msmarco/0/cfdb1ddb829d1222bbfc45ff",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "http://www.jango.com/music/Macy+Gray"
+        }
+      },
+      {
+        "id": "index:msmarco/0/8d40273edbec88af073db831",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How to Create a Killer Hybrid Workout Plan at Home",
+          "url": "http://soreyfitness.com/fitness/create-a-hybrid-workout/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/befec052c99d665a4c1c8386",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How to Improve Digestion Naturally with 5 Simple Tips",
+          "url": "http://naturalsociety.com/how-to-improve-digestion-naturally-5-simple-tips/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/fbce70bf327cf09e9df80954",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "An Introduction to Freshwater Cane Pole Fishing",
+          "url": "http://fishing.about.com/od/rodsandreels/a/Cane-Pole-Fishing.htm"
+        }
+      },
+      {
+        "id": "index:msmarco/0/aa92209342477e220b2d1ecf",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "A Chronological History of the University of Alabama at Birmingham  UAB  and its Predecessor Institutions and Organizations  1831 ",
+          "url": "https://www.uab.edu/archives/chron"
+        }
+      },
+      {
+        "id": "index:msmarco/0/99d7aaa293b905324010aa27",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Pimple Like Bumps on the Scalp",
+          "url": "http://www.livestrong.com/article/293115-pimple-like-bumps-on-the-scalp/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/dba29cc12b9f4608309e4199",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "The storage areas in cells are called ",
+          "url": "http://www.answers.com/Q/The_storage_areas_in_cells_are_called"
+        }
+      },
+      {
+        "id": "index:msmarco/0/eb5baffa4d4019e1f0998909",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Grass Seed After Fertilizer",
+          "url": "http://www.gardenguides.com/137165-grass-seed-after-fertilizer.html"
+        }
+      },
+      {
+        "id": "index:msmarco/0/6192cfa589934cc358b91829",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What does a pamper night include ",
+          "url": "https://uk.answers.yahoo.com/question/index?qid=20110313140455AAQs9yM"
+        }
+      },
+      {
+        "id": "index:msmarco/0/b8518f130d257f919d04e593",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How to remove  uninstall  360 Total Security",
+          "url": "http://www.youtube.com/watch?v=kL5rw12FZ0U"
+        }
+      },
+      {
+        "id": "index:msmarco/0/a63667ca18ce3d3b165e6063",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Calories in Russell Stover Candies Milk Chocolate Covered Caramel",
+          "url": "http://www.myfitnesspal.com/food/calories/russell-stover-candies-milk-chocolate-covered-caramel-632650558?v2=false"
+        }
+      },
+      {
+        "id": "index:msmarco/0/e14ae188a0a189bcd950e6f6",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Top 20 NBA Players That Need To Retire",
+          "url": "https://www.thesportster.com/basketball/top-20-nba-players-that-need-to-retire/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/4d408454ddfcb43ba2c3ecc8",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Green Anacondas",
+          "url": "http://www.vanaqua.org/learn/aquafacts/reptiles/anacondas"
+        }
+      },
+      {
+        "id": "index:msmarco/0/86c65a2b016db489f3046663",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Where Is the Ozone Layer Located ",
+          "url": "https://www.reference.com/science/ozone-layer-located-834d7de18c55347"
+        }
+      },
+      {
+        "id": "index:msmarco/0/3a09b6ff866d091109319b68",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Jupiter",
+          "url": "http://www.yourdictionary.com/jupiter"
+        }
+      },
+      {
+        "id": "index:msmarco/0/9347f5daed4d33968108d8f7",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "FAQs on Race and Ethnicity Reporting under IPEDS",
+          "url": "http://www.aacrao.org/resources/compliance/ipeds-reporting/faqs-on-race-and-ethnicity-reporting-under-ipeds"
+        }
+      },
+      {
+        "id": "index:msmarco/0/903bf1cb5df0fda7dc2a0662",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What episode of Greys Anatomy does Meredith sleep with George ",
+          "url": "http://www.chacha.com/question/what-episode-of-greys-anatomy-does-meredith-sleep-with-george"
+        }
+      },
+      {
+        "id": "index:msmarco/0/ad7f847593a72cd1b10d9d3a",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Routing and Routed protocol",
+          "url": "https://learningnetwork.cisco.com/thread/31175"
+        }
+      },
+      {
+        "id": "index:msmarco/0/24b089dd2d50fda0de15e962",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What is the largest species of Corydoras ",
+          "url": "http://www.planetcatfish.com/forum/viewtopic.php?t=25013"
+        }
+      },
+      {
+        "id": "index:msmarco/0/ac21ec2f3724433ba176eb73",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "http://www.memorialpages.co.uk/articles/decomposition.php"
+        }
+      },
+      {
+        "id": "index:msmarco/0/0caf07d9c74d4009a3e065a9",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Orchidopexy",
+          "url": "http://www.childrensurgery.co.uk/diagnoses/orchidopexy.html"
+        }
+      },
+      {
+        "id": "index:msmarco/0/8ff5e7bb30b2f9568484ce67",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "tongue in cheek",
+          "url": "https://www.merriam-webster.com/dictionary/tongue-in-cheek"
+        }
+      },
+      {
+        "id": "index:msmarco/0/f518abeaca8f187c30cecbca",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Fate  TX Weather",
+          "url": "http://www.areavibes.com/fate-tx/weather/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/a91abf026d26d7d6aba8a4a8",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Humanity uses 70  more of the global commons than the Earth can regenerate",
+          "url": "https://www.theguardian.com/the-gef-partner-zone/2017/nov/14/humanity-global-commons-earth-regenerate-sustainable-development-goals"
+        }
+      },
+      {
+        "id": "index:msmarco/0/2a2e4d219832be675f5bc1a2",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "http://www.primaryhomeworkhelp.co.uk/religion/buddhism.htm"
+        }
+      },
+      {
+        "id": "index:msmarco/0/4bdfad36c69db14ab0290efb",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "The Ankle Joint",
+          "url": "http://www.ideafit.com/fitness-library/ankle-joint-anatomy"
+        }
+      },
+      {
+        "id": "index:msmarco/0/0a0c1737ee28ec265171f999",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Shadows and Angles  Measuring Object Heights from Satellite Imagery",
+          "url": "https://www.gislounge.com/shadows-angles-measuring-object-heights-satellite-imagery/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/4f17416d5f8ce548c1791d00",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Right pulmonary artery",
+          "url": "http://www.healthline.com/human-body-maps/right-pulmonary-artery"
+        }
+      },
+      {
+        "id": "index:msmarco/0/c5b0a80377eeb055fc00c870",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How much   would I get for a used DS Lite and charger at Gamestop ",
+          "url": "https://www.gamespot.com/forums/nintendo-fan-club-1000001/how-much-would-i-get-for-a-used-ds-lite-and-charge-26807706/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/c4c6e005cf5999a78b55d621",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How to Get a Name Off a Deed",
+          "url": "http://budgeting.thenest.com/name-off-deed-24687.html"
+        }
+      },
+      {
+        "id": "index:msmarco/0/bb0348b676348513cc736622",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How thin are Capillaries ",
+          "url": "http://www.answers.com/Q/Why_are_capillaries_so_thin"
+        }
+      },
+      {
+        "id": "index:msmarco/0/61a3f67ff3731f643f40d8aa",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Jobs in Jersey City  New Jersey",
+          "url": "https://www.monster.com/jobs/l-jersey-city,-nj.aspx"
+        }
+      },
+      {
+        "id": "index:msmarco/0/e8d4ba5ac46fafdaaabae3df",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Tax Information Related to   dependents  ",
+          "url": "https://www.efile.com/category/claiming-dependents-exemptions/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/b6865b6565fb5a6dc3ca5e0d",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Speed  TV network ",
+          "url": "https://en.wikipedia.org/wiki/Speed_Channel"
+        }
+      },
+      {
+        "id": "index:msmarco/0/837c36f85a7e4a1f71a5cb8e",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "80  Best Free Hacking Tutorials   Resources to Become Pro Hacker",
+          "url": "http://www.fromdev.com/2013/07/Hacking-Tutorials.html"
+        }
+      },
+      {
+        "id": "index:msmarco/0/1a9eda025b4bf92b44efcb57",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How to remove search conduit com and Search Protect  IE  Chrome  Firefox ",
+          "url": "http://www.youtube.com/watch?v=wwMBPtdZrPY"
+        }
+      },
+      {
+        "id": "index:msmarco/0/a50bf9f24840e50e0dff78db",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "New Toll Calculator Pins Help Travelers Budget for Travel in 2015",
+          "url": "http://beta.costtodrive.com/2015/01/new-toll-calculator-pins-help-travelers-budget-for-travel-in-2015/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/5951937ef5cf0ef6193f1fa3",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "4 Pros Cons of Bacteria ",
+          "url": "https://prezi.com/vf3sbc9mdrnn/4-proscons-of-bacteria/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/a789075d0125256564d6ad3e",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "https://www.eventsfy.com/venue/guthrie-theater/minneapolis"
+        }
+      },
+      {
+        "id": "index:msmarco/0/f0fd640908b13c7a08ddce93",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " What does   Cold War   mean  ",
+          "url": "https://answers.yahoo.com/question/index?qid=20090501164112AArcDwa"
+        }
+      },
+      {
+        "id": "index:msmarco/0/b85d332723f83631386d0c17",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "News Scrabble s 2 Letter Words   Defined",
+          "url": "https://scrabble.wonderhowto.com/news/scrabbles-2-letter-words-defined-0115816/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/db3a3ac35577e145aa8bec1c",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What does QDRO mean   pronounced quadro ",
+          "url": "http://www.divorcesaloon.com/2006/07/15/what-does-qdro-mean-pronounced-quadro/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/96294709bf404451e7bf75fe",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Stafford County Dog Park",
+          "url": "https://www.facebook.com/BuildStaffordCountyADogPark"
+        }
+      },
+      {
+        "id": "index:msmarco/0/62efee2817bd9b88c1948d51",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "https://tax-id-number.info/ViewArticle/Photography%20License%20In%20Texas.aspx"
+        }
+      },
+      {
+        "id": "index:msmarco/0/638d88b4f9ff7ecf69b81c39",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What does handicap mean ",
+          "url": "https://answers.yahoo.com/question/index?qid=20070625153515AAjBA5Q"
+        }
+      },
+      {
+        "id": "index:msmarco/0/96b7a444145d2e465a7433ab",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How long will cooked chicken stay good in the refrigerator ",
+          "url": "https://answers.yahoo.com/question/index?qid=20061024184949AAzFyBF"
+        }
+      },
+      {
+        "id": "index:msmarco/0/408f2313c9c157e7eabb3441",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "https://nces.ed.gov/programs/statereform/tab5_3.asp"
+        }
+      },
+      {
+        "id": "index:msmarco/0/d52541844ed9177aa4691e33",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Clinical effectiveness and economic costs of group versus one to one education for short chain fermentable carbohydrate restriction  low FODMAP diet  in the management of irritable bowel syndrome",
+          "url": "http://onlinelibrary.wiley.com/doi/10.1111/jhn.12318/abstract"
+        }
+      },
+      {
+        "id": "index:msmarco/0/21b371267e3b34e91c14cc2b",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "https://labyrinthsociety.org/about-labyrinths"
+        }
+      },
+      {
+        "id": "index:msmarco/0/53c1bead7f801bb458e4c347",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "J  K  Rowling Is No Longer A Billionaire  Booted Off Forbes List",
+          "url": "http://www.businessinsider.com/jk-rowling-is-no-longer-a-billionaire-booted-off-forbes-list-2012-3"
+        }
+      },
+      {
+        "id": "index:msmarco/0/c37fb55f203dcbb876fac313",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What Is Carbon Monoxide Poisoning ",
+          "url": "https://www.boat-ed.com/canada/studyGuide/What-Is-Carbon-Monoxide-Poisoning/101199_700084086/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/ddf233c9b62f4c88a75cc826",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "http://www.formdrill-usa.com/formtap.htm"
+        }
+      },
+      {
+        "id": "index:msmarco/0/e086161dfa80cd73e9b77d08",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Speed pays",
+          "url": "https://www.entropay.com/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/b273622d5186e6d637ae57a7",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Stealing  Lying  and Cheating  Why Your Child Does It and What to Do About It",
+          "url": "http://www.onetoughjob.org/articles/stealing-lying-and-cheating-why-your-child-does-it-and-what-to-do-about-it"
+        }
+      },
+      {
+        "id": "index:msmarco/0/d674c0f47a0bc7b9dc4ac300",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Actavis",
+          "url": "http://businessfinder.nj.com/7532302/Actavis-Elizabeth-NJ"
+        }
+      },
+      {
+        "id": "index:msmarco/0/a96a27d6e50717bd2af82ed0",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "DIT Tuition   Cost Guide",
+          "url": "http://www.collegesimply.com/colleges/washington/digipen-institute-of-technology/price/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/2574e1322f635f9bc43ace94",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How are fingernails and hair made of the same thing ",
+          "url": "https://answers.yahoo.com/question/index?qid=20061226180619AAerNda"
+        }
+      },
+      {
+        "id": "index:msmarco/0/9672d92001a0d62acf877f1e",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Bloomfield  First N  J  town this year to mandate Paid Sick Leave",
+          "url": "http://www.bloomfieldtwpnj.com/main/press-release/bloomfield-first-nj-town-year-mandate-paid-sick-leave"
+        }
+      },
+      {
+        "id": "index:msmarco/0/d09e638f7e74929f256a1a4b",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What are volcanoes made of  How do they grow ",
+          "url": "http://volcano.oregonstate.edu/what-are-volcanoes-made"
+        }
+      },
+      {
+        "id": "index:msmarco/0/c13aeb9931af4e20ecc9cd47",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Hereâs Why Our Auto Loan Debt Has Hit  886 Billion",
+          "url": "http://www.thefiscaltimes.com/2015/03/16/Here-s-Why-Our-Auto-Loan-Debt-Has-Hit-886-Billion"
+        }
+      },
+      {
+        "id": "index:msmarco/0/4b97076d49c7558551fe54ed",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Indians Rumors",
+          "url": "https://www.mlbtraderumors.com/cleveland-indians"
+        }
+      },
+      {
+        "id": "index:msmarco/0/2cd1f6f2088dc0b96f77cd65",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Shopping for Omega 3s  Top Sources at Your Store",
+          "url": "http://www.webmd.com/diet/ss/slideshow-omega-3-shopping"
+        }
+      },
+      {
+        "id": "index:msmarco/0/ac28e4bb4e6e951892a61adb",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Reasons Not to Take Magnesium Supplements",
+          "url": "http://www.livestrong.com/article/253202-reasons-not-to-take-magnesium-supplements/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/a7807e05b34b93b2ecb0fc65",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Rapper Shawty Lo killed in car crash aged 40",
+          "url": "https://www.theguardian.com/music/2016/sep/21/shawty-lo-rapper-dies-car-crash"
+        }
+      },
+      {
+        "id": "index:msmarco/0/777f38084ee6bb9f59ae666a",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "When was Infosys founded ",
+          "url": "https://www.quora.com/When-was-Infosys-founded"
+        }
+      },
+      {
+        "id": "index:msmarco/0/788b20f917fe2d086c87dfd7",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What is Protective Tariff ",
+          "url": "http://legaliq.com/Definition/Protective_Tariff"
+        }
+      },
+      {
+        "id": "index:msmarco/0/e9b47fbe2e235ad71b168f64",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Healthy Living",
+          "url": "https://www.canada.ca/en/public-health/services/health-promotion/healthy-living.html"
+        }
+      },
+      {
+        "id": "index:msmarco/0/2af8746015e68db963e69782",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Pumice",
+          "url": "http://geology.com/rocks/pumice.shtml"
+        }
+      },
+      {
+        "id": "index:msmarco/0/99a0cc1e176861c9bcc2032f",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Cold Case Solved  Carlina White Reunites With Parents",
+          "url": "http://abcnews.go.com/US/kidnapped-carlina-white-solves-cold-case-reunites-parents/story?id=12712313"
+        }
+      },
+      {
+        "id": "index:msmarco/0/a73b78f38a62ba3c4e5eeacd",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "honourable intentions meaning  honourable intentions definition   English Cobuild dictionary",
+          "url": "http://dictionary.reverso.net/english-cobuild/honourable%20intentions"
+        }
+      },
+      {
+        "id": "index:msmarco/0/b22bda76a0fc7dd152882437",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "how to install sportster kickstand spring",
+          "url": "http://autorepairmagz.com/search/how+to+install+sportster+kickstand+spring"
+        }
+      },
+      {
+        "id": "index:msmarco/0/c22be36f2e1808b9b8cf3bf6",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How Much Does a New Garage Door Cost ",
+          "url": "https://www.actiondoor.com/how-much-does-a-new-garage-door-cost/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/7dc31f9cd2007807ff464a79",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "https://stackoverflow.com/questions/14614689/how-much-memory-do-i-need-to-have-for-100-million-records"
+        }
+      },
+      {
+        "id": "index:msmarco/0/ef022deaad6438f799814442",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Destin Temperatures  Averages by Month",
+          "url": "https://www.currentresults.com/Weather/Florida/Places/destin-temperatures-by-month-average.php"
+        }
+      },
+      {
+        "id": "index:msmarco/0/22200b00268a071f2977b3d4",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Where is Dubai  The United Arab Emirates ",
+          "url": "https://www.worldatlas.com/as/ae/du/where-is-dubai.html"
+        }
+      },
+      {
+        "id": "index:msmarco/0/40e3877c1624d0bd850cf549",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Frangipani   Plumeria Growing Advice",
+          "url": "http://www.sacredgardenfrangipanis.com/frangipani_growing_advice.php"
+        }
+      },
+      {
+        "id": "index:msmarco/0/f310b664e606885caa0a69cc",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": " ",
+          "url": "http://www3.epa.gov/radtown/antiques.html"
+        }
+      },
+      {
+        "id": "index:msmarco/0/473664390431a98e40574c35",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "hydroxyurea",
+          "url": "https://www.question.com/medication/hydroxyurea.html"
+        }
+      },
+      {
+        "id": "index:msmarco/0/7c3d6a84bbf2034606f253c4",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What Else ",
+          "url": "http://www.laineygossip.com/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/ec8bef94f17d7de56d3fe1d7",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Fleet Manager Salaries",
+          "url": "http://www1.salary.com/Fleet-Manager-salary.html"
+        }
+      },
+      {
+        "id": "index:msmarco/0/163b4d392f02c41a4bd9f24d",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "abridge",
+          "url": "http://www.dictionary.com/browse/abridging"
+        }
+      },
+      {
+        "id": "index:msmarco/0/b0f15759e41df69369837db9",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "UML 2 Use Case Diagrams  An Agile Introduction",
+          "url": "http://www.agilemodeling.com/artifacts/useCaseDiagram.htm"
+        }
+      },
+      {
+        "id": "index:msmarco/0/9280d372de33ae423f7231c7",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How do you password protect the folders in your documents ",
+          "url": "http://www.answers.com/Q/FOLDER_is_to_DOCUMENT_as_ENVELOPE_is_to"
+        }
+      },
+      {
+        "id": "index:msmarco/0/30b3cb9e9209a3ee92ffc386",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "How Do I Know if my Glasses Prescription is Wrong ",
+          "url": "http://blog.myeyewear2go.com/how-do-i-know-if-my-glasses-prescription-is-wrong/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/a2e52d0698d7f59a7444d530",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Anthony Scaramucci Net Worth",
+          "url": "http://www.therichest.com/celebnetworth/celebrity-business/men/anthony-scaramucci-net-worth/"
+        }
+      },
+      {
+        "id": "index:msmarco/0/f2e9668d12153dbc1f71d663",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "What city in Arizona is closest to the Grand Canyon ",
+          "url": "https://answers.yahoo.com/question/index?qid=20080107055318AAVRdGU"
+        }
+      },
+      {
+        "id": "index:msmarco/0/597dad0a4f69a28116678d46",
+        "relevance": 0,
+        "source": "msmarco",
+        "fields": {
+          "title": "Microsoft announces new VR headsets for Windows 10  starting at  299",
+          "url": "http://www.theverge.com/2016/10/26/13418156/microsoft-windows-10-holographic-virtual-reality-headset-announced-price"
+        }
+      }
+    ]
+  }
 }

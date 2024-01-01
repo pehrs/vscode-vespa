@@ -256,7 +256,7 @@ function registerYqlFormatter(context: ExtensionContext) {
 		provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
 
 			formatYql();
-			
+
 			// const firstLine = document.lineAt(0);
 			// if (firstLine.text !== '42') {
 			// 	return [vscode.TextEdit.insert(firstLine.range.start, '42\n')];
@@ -592,11 +592,22 @@ class YqlResultsPanel {
 					case 'alert':
 						vscode.window.showErrorMessage(message.text);
 						return;
+					case 'save_json':
+						this.saveResultJsonAs();
+						return;
 				}
 			},
 			null,
 			this._disposables
 		);
+	}
+
+	public saveResultJsonAs() {
+		vscode.window.showSaveDialog({title: "Save Result JSON as"}).then(fileInfos => {
+			// here you can use fs to handle data saving
+			outputChannel.appendLine("Saving " + JSON.stringify(this.data, null, 2));
+			fs.writeFileSync(fileInfos.path, JSON.stringify(this.data, null, 2));
+		});
 	}
 
 	public doRefactor() {
@@ -728,6 +739,7 @@ class YqlResultsPanel {
 
 		// JSON
 		result += `<div class="tab"><p>`;
+		result += `<button class="button" id="save_json_btn">Save JSON</button>`;
 		result += `<div><pre>${JSON.stringify(this.data, null, 2)}</pre></div>`;
 		result += `</p></div>`;
 
@@ -735,7 +747,8 @@ class YqlResultsPanel {
 		// TRACE
 		if (this.zipkinLink !== undefined) {
 			result += `<div class="tab"><p>`;
-			result += `<h2><a href="${this.zipkinLink}">Open in browser...</a></h2>`;
+			result += `<button class="button" id="save_json_btn"><a href="${this.zipkinLink}">Open in browser...</a></button>`;
+			// result += `<h2><a href="${this.zipkinLink}">Open in browser...</a></h2>`;
 			result += `<div><iframe width="100%" height=1024px" src="${this.zipkinLink}" title="Zipkin Trace"></iframe></div>`;
 			result += `</p></div>`;
 		}
@@ -798,6 +811,7 @@ class YqlResultsPanel {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 				<link href="${stylesResetUri}" rel="stylesheet"/>
+				<link href="${stylesMainUri}" rel="stylesheet"/>
 				<link href="${stylesTableUri}" rel="stylesheet"/>
 				<link href="${stylesTabsUri}" rel="stylesheet"/>
 

@@ -2,6 +2,10 @@
 
 All notable changes to the "vscode-vespa" extension will be documented in this file.
 
+## [1.0.2]
+
+- Add button to save result json as file.
+
 
 ## [1.0.1]
 

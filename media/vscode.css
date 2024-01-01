@@ -55,6 +55,11 @@ button {
 	background: var(--vscode-button-background);
 }
 
+button > a:hover, button > a:active, button > a {
+	color: var(--vscode-button-foreground);
+	text-decoration: none;
+}
+
 button:hover {
 	cursor: pointer;
 	background: var(--vscode-button-hoverBackground);
