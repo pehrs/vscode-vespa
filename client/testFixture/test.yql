@@ -1,18 +1,18 @@
 {
-    "yql": "select title, url from msmarco where true limit 100",
-    "offset": 5,
-    "ranking": {
-        "matchPhase": {
-            "ascending": true,
-            "maxHits": 15
-        }
-    },
-    "presentation" : {
-        "bolding": false,
-        "format": "json"
-    },
-   "trace": {
-     "level": 4,
-     "timestamps": true
-   }
+  "yql": "select title, url from msmarco where true limit 100",
+  "offset": 5,
+  "ranking": {
+    "matchPhase": {
+      "ascending": true,
+      "maxHits": 15
+    }
+  },
+  "presentation": {
+    "bolding": false,
+    "format": "json"
+  },
+  "trace": {
+    "level": 4,
+    "timestamps": true
+  }
 }

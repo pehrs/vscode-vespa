@@ -2,7 +2,7 @@
   "name": "vscode-vespa",
   "displayName": "vscode-vespa",
   "description": "Vespa AI Extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "pehrs-com",
   "license": "SEE LICENSE IN LICENSE",
   "icon": "media/vespa.png",
@@ -41,13 +41,9 @@
     "keybindings": [
       {
         "command": "vscode-vespa.runQuery",
+        "when": "editorLangId == yql",
         "key": "ctrl+enter",
         "mac": "cmd+enter"
-      },
-      {
-        "command": "vscode-vespa.format",
-        "key": "ctrl+shift+i",
-        "mac": "cmd+shift-i"
       }
     ],
     "menus": {
@@ -67,11 +63,6 @@
         {
           "when": "resourceLangId == yql",
           "command": "vscode-vespa.runQuery",
-          "group": "navigation"
-        },
-        {
-          "when": "resourceLangId == yql",
-          "command": "vscode-vespa.format",
           "group": "navigation"
         }
       ]

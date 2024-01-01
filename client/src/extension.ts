@@ -34,6 +34,8 @@ export function activate(context: ExtensionContext) {
 	registerRunQueryCommand(context);
 	registerFormatterCommand(context);
 
+	registerYqlFormatter(context);
+
 	// NOT Needed yet as we are not saving the result state anywhere
 	// Results panel view
 	// if (vscode.window.registerWebviewPanelSerializer) {
@@ -231,11 +233,13 @@ function registerRunQueryCommand(context: ExtensionContext) {
 
 		const editor = vscode.window.activeTextEditor;
 
+		outputChannel.appendLine(`file:  ${editor.document.fileName}`);
+
 		const workbenchConfig = vscode.workspace.getConfiguration('vespaYql');
 		const queryEndpoint: string = workbenchConfig.get('queryEndpoint');
 		const queryTimeout: string = workbenchConfig.get('queryTimeout');
 
-		if (editor) {
+		if (editor && editor.document.fileName.endsWith(".yql")) {
 			const document = editor.document;
 			// Get the document text
 			const yql = document.getText();
@@ -247,38 +251,60 @@ function registerRunQueryCommand(context: ExtensionContext) {
 }
 
 
+function registerYqlFormatter(context: ExtensionContext) {
+	vscode.languages.registerDocumentFormattingEditProvider('yql', {
+		provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
+
+			formatYql();
+			
+			// const firstLine = document.lineAt(0);
+			// if (firstLine.text !== '42') {
+			// 	return [vscode.TextEdit.insert(firstLine.range.start, '42\n')];
+			// }
+			return [];
+		}
+	});
+}
+
+
+function formatYql() {
+	const editor = vscode.window.activeTextEditor;
+
+	outputChannel.appendLine(`format ${editor.document.fileName}`);
+
+	if (editor && editor.document.fileName.endsWith(".yql")) {
+		try {
+			const document = editor.document;
+			// Get the document text
+			const yql = document.getText();
+
+			const jsonObj = JSON.parse(yql);
+			const newYql = JSON.stringify(jsonObj, null, 2);
+
+			const start = new vscode.Position(0, 0);
+			const lastLine = document.lineCount - 1;
+			const end = new vscode.Position(lastLine, document.lineAt(lastLine).text.length);
+			const allText = new vscode.Range(start, end);
+
+			const edit = new vscode.WorkspaceEdit();
+			edit.replace(document.uri, allText, newYql);
+			// edit.insert(document.uri, firstLine.range.start, '42\n');
+
+			return vscode.workspace.applyEdit(edit);
+		} catch (e) {
+			if (typeof e === "string") {
+				showError(e);
+			} else if (e instanceof Error) {
+				showError(e.message);
+			}
+		}
+	}
+}
+
 function registerFormatterCommand(context: ExtensionContext) {
 	const runYqlCommand = vscode.commands.registerCommand('vscode-vespa.format', () => {
 
-		const editor = vscode.window.activeTextEditor;
-
-		if (editor) {
-			try {
-				const document = editor.document;
-				// Get the document text
-				const yql = document.getText();
-
-				const jsonObj = JSON.parse(yql);
-				const newYql = JSON.stringify(jsonObj, null, 2);
-
-				const start = new vscode.Position(0, 0);
-				const lastLine = document.lineCount - 1;
-				const end = new vscode.Position(lastLine, document.lineAt(lastLine).text.length);
-				const allText = new vscode.Range(start, end);
-
-				const edit = new vscode.WorkspaceEdit();
-				edit.replace(document.uri, allText, newYql);
-				// edit.insert(document.uri, firstLine.range.start, '42\n');
-
-				return vscode.workspace.applyEdit(edit);
-			} catch (e) {
-				if (typeof e === "string") {
-					showError(e);
-				} else if (e instanceof Error) {
-					showError(e.message);
-				}
-			}
-		}
+		formatYql();
 	});
 	context.subscriptions.push(runYqlCommand);
 }
@@ -709,8 +735,8 @@ class YqlResultsPanel {
 		// TRACE
 		if (this.zipkinLink !== undefined) {
 			result += `<div class="tab"><p>`;
-			result += `<h2><a href="${this.zipkinLink}">Open in browser...</a></h2>`;			
-			result += `<div><iframe width="100%" height=1024px" src="${this.zipkinLink}" title="Zipkin Trace"></iframe></div>`;			
+			result += `<h2><a href="${this.zipkinLink}">Open in browser...</a></h2>`;
+			result += `<div><iframe width="100%" height=1024px" src="${this.zipkinLink}" title="Zipkin Trace"></iframe></div>`;
 			result += `</p></div>`;
 		}
 
@@ -745,12 +771,12 @@ class YqlResultsPanel {
 
 		// Enable the iframe to load the zipkin url
 		let cspUrl = "http://127.0.0.1:9411 http://localhost:9411";
-		if(this.zipkinLink !== undefined) {
+		if (this.zipkinLink !== undefined) {
 			const url = new URL(this.zipkinLink);
 			cspUrl = `${url.protocol}//${url.host}`;
-			if(url.hostname === "localhost") {
+			if (url.hostname === "localhost") {
 				cspUrl = `${url.protocol}//127.0.0.1:${url.port} ${cspUrl}`;
-			}			
+			}
 		}
 		// outputChannel.appendLine(`cspUrl: ${cspUrl}`);
 

@@ -71,8 +71,4 @@ This is not enabled as the features it gives, at the moment, is limited.
 
 ## Release Notes
 
-### 1.0.0
-
-Initial release
-
----
+Please read the [CHANGELOG](CHANGELOG.md)
