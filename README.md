@@ -49,9 +49,9 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-### YQL Formatting
+### YQL Syntax
 
-The formatting is just reusing the [vscode JSON syntax](https://github.com/microsoft/vscode/blob/main/extensions/json/syntaxes/JSON.tmLanguage.json) 
+The syntax is just reusing the [vscode JSON syntax](https://github.com/microsoft/vscode/blob/main/extensions/json/syntaxes/JSON.tmLanguage.json) 
 until we have time to create a custom YQL syntax.
 
 ### Zipkin traces

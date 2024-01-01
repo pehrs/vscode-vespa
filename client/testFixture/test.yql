@@ -1,5 +1,5 @@
 {
-  "yql": "select title, url from msmarco where true limit 100",
+  "yql": "select * from msmarco where true limit 10",
   "offset": 5,
   "ranking": {
     "matchPhase": {
@@ -12,7 +12,7 @@
     "format": "json"
   },
   "trace": {
-    "level": 4,
+    "level": 5,
     "timestamps": true
   }
 }
