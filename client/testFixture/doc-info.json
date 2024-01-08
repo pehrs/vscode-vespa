@@ -1,0 +1,34 @@
+{
+    "docTypeNames": {},
+    "docTypes": {
+        "msmarco": {
+            "total": {
+                "hostname": "total",
+                "docCount": 97506,
+                "memUsageBytes": 63927544,
+                "diskUsageBytes": 3163847530,
+                "transactionLogUsageBytes": 40070144
+            },
+            "groupDistributionKeys": [
+                "0",
+                "1"
+            ],
+            "groups": {
+                "0": {
+                    "hostname": "vespa-c-0.vespa-c.default.svc.cluster.local",
+                    "docCount": 48652,
+                    "memUsageBytes": 31973216,
+                    "diskUsageBytes": 1577833407,
+                    "transactionLogUsageBytes": 20020512
+                },
+                "1": {
+                    "hostname": "vespa-c-1.vespa-c.default.svc.cluster.local",
+                    "docCount": 48854,
+                    "memUsageBytes": 31954328,
+                    "diskUsageBytes": 1586014123,
+                    "transactionLogUsageBytes": 20049632
+                }
+            }
+        }
+    }
+}

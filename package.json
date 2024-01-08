@@ -34,8 +34,32 @@
       },
       {
         "command": "vscode-vespa.format",
-        "title": "Format YQL.",
+        "title": "Format YQL",
         "icon": "$(code)"
+      },
+      {
+        "command": "vscode-vespa.refreshVespaConfig",
+        "title": "Reload",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "vscode-vespa.editVespaConfig",
+        "title": "Edit Vespa Cluster Configuration",
+        "icon": "$(settings)"
+      },
+      {
+        "command": "vscode-vespa.selectClusterAsDefault",
+        "title": "Connect to cluster"
+      },
+      {
+        "command": "vscode-vespa.showClusterInfo",
+        "title": "Show Vespa Cluser Info",
+        "icon": "$(symbol-number)"
+      },
+      {
+        "command": "vscode-vespa.selectConnection",
+        "title": "Connect to cluster",
+        "icon": "$(database)"
       }
     ],
     "keybindings": [
@@ -50,12 +74,52 @@
       "editor/title": [
         {
           "when": "resourceLangId == yql",
+          "command": "vscode-vespa.selectConnection",
+          "group": "1_run"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.selectConnection",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.runQuery",
+          "group": "1_run"
+        },
+        {
+          "when": "resourceLangId == yql",
           "command": "vscode-vespa.runQuery",
           "group": "navigation"
         },
         {
           "when": "resourceLangId == yql",
+          "command": "vscode-vespa.editVespaConfig",
+          "group": "1_run"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.editVespaConfig",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == yql",
           "command": "vscode-vespa.format",
+          "group": "1_run"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.format",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.showClusterInfo",
+          "group": "1_run"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.showClusterInfo",
           "group": "navigation"
         }
       ],
@@ -63,7 +127,54 @@
         {
           "when": "resourceLangId == yql",
           "command": "vscode-vespa.runQuery",
+          "group": "z_commands"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.selectConnection",
+          "group": "z_commands"
+        },
+        {
+          "when": "resourceLangId == yql",
+          "command": "vscode-vespa.showClusterInfo",
+          "group": "z_commands"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "vscode-vespa.selectClusterAsDefault",
+          "when": "view == vespaConfigView && viewItem == VESPA_CLUSTER"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "vscode-vespa.refreshVespaConfig",
+          "when": "view == vespaConfigView",
           "group": "navigation"
+        },
+        {
+          "command": "vscode-vespa.editVespaConfig",
+          "when": "view == vespaConfigView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vespa-explorer",
+          "title": "Vespa Explorer",
+          "icon": "media/vespa.png"
+        }
+      ]
+    },
+    "views": {
+      "vespa-explorer": [
+        {
+          "id": "vespaConfigView",
+          "name": "Vespa Configuration",
+          "icon": "media/vespa.png",
+          "contextualTitle": "Vespa Explorer"
         }
       ]
     },
@@ -90,37 +201,7 @@
         "language": "yql",
         "path": "./yql-snippets.json"
       }
-    ],
-    "configuration": {
-      "type": "object",
-      "title": "Example configuration",
-      "properties": {
-        "vespaYql.configEndpoint": {
-          "scope": "resource",
-          "type": "string",
-          "default": "http://127.0.0.1:19071",
-          "description": "Endpoint for Vespa Config Server."
-        },
-        "vespaYql.queryEndpoint": {
-          "scope": "resource",
-          "type": "string",
-          "default": "http://127.0.0.1:8080/search",
-          "description": "Endpoint for Vespa YQL Queries."
-        },
-        "vespaYql.zipkinEndpoint": {
-          "scope": "resource",
-          "type": "string",
-          "default": "http://127.0.0.1:9411",
-          "description": "Endpoint for Zipkin traces."
-        },
-        "vespaYql.queryTimeout": {
-          "scope": "resource",
-          "type": "string",
-          "default": "10s",
-          "description": "Timeout for Vespa YQL Queries."
-        }
-      }
-    }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -144,6 +225,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "fast-xml-parser": "^4.3.2",
     "node-fetch": "^3.3.2"
   }
 }
