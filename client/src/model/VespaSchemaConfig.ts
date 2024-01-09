@@ -1,4 +1,8 @@
-export interface SchemaField {
+import { vespaConfig } from '../VespaConfig';
+import { fetchWithTimeout } from '../vespaUtils';
+import { VespaAppId } from './VespaAppId';
+
+export interface VespaSchemaField {
 	name: string;
 	type: string;
 	alias: string[];
@@ -6,42 +10,59 @@ export interface SchemaField {
 	index : boolean;
 }
 
-export interface SchemaFieldSet {
+export interface VespaSchemaFieldSet {
 	name: string;
 	field: string[];
 }
 
-export interface SchemaSummaryField {
+export interface VespaSchemaSummaryField {
 	name: string;
 	type: string;
 	dynamic: boolean;
 }
 
-export interface SchemaSummaryClass {
+export interface VespaSchemaSummaryClass {
 	name: string;
-	field: SchemaSummaryField[];
+	field: VespaSchemaSummaryField[];
 }
 
-export interface SchemaRankProfileInput {
+export interface VespaSchemaRankProfileInput {
 	name: string;
 	type: string;
 }
 
-export interface SchemaRankProfile {
+export interface VespaSchemaRankProfile {
 	name: string;
 	hasSummaryFeatures: boolean;
 	hasRankFeatures: boolean;
-	input: SchemaRankProfileInput[];
+	input: VespaSchemaRankProfileInput[];
 }
 
-export interface Schema {
+export interface VespaSchema {
 	name: string;
-	field: SchemaField[];
-	fieldSet: SchemaFieldSet[];
-	summaryClass: SchemaSummaryClass[];
-	rankProfile: SchemaRankProfile[];
+	field: VespaSchemaField[];
+	fieldSet: VespaSchemaFieldSet[];
+	summaryClass: VespaSchemaSummaryClass[];
+	rankProfile: VespaSchemaRankProfile[];
 }
 
-export interface SchemaConfig {
-	schema: Schema[];
+export class VespaSchemaConfig {
+	schema: VespaSchema[];
+
+	constructor(data: any) {
+		this.schema = data.schema;
+	}
+
+	static async fetchSchemas(configEndpoint: string, appId: VespaAppId, configid: string): Promise<VespaSchemaConfig> {
+		// const configEndpoint: string = vespaConfig.configEndpoint();
+		// const configid = storageConfig.configid;
+		const schemaListUrl = `${configEndpoint}/config/v2/tenant/${appId.tenant}/application/${appId.application}/search.config.schema-info/${configid}/search/cluster.${configid}`;
+		const timeout = vespaConfig.httpTimeoutMs();
+	
+		// outputChannel.appendLine(`Getting Schemas for ${configid} from ${configEndpoint}`);
+		return fetchWithTimeout(schemaListUrl, timeout)
+			.then(response => response.json()
+				.then(v => new VespaSchemaConfig(v)));		
+	}
 }
+

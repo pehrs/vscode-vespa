@@ -5,3 +5,4 @@ node_modules
 *.vsix
 client/server
 .vscode-test
+.metals

@@ -14,7 +14,7 @@ describe('VespaMetrics', function () {
 
 			const metrics = VespaV2Metrics.parse(metrics2ContentNodes);
 
-			console.log("metrics: ", JSON.stringify(metrics));
+			console.log("metrics: ", JSON.stringify(metrics));			
 	
 			// assert.equal(hostsAliases.hosts.size, 4);
 		});

@@ -21,4 +21,7 @@
     // "mochaExplorer.require": "ts-node/register",
     "mochaExplorer.require": "source-map-support/register",
     "mochaExplorer.files": "client/out/**/*.test.js",
+    "files.watcherExclude": {
+        "**/target": true
+    },
 }

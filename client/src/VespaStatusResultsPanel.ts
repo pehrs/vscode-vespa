@@ -49,12 +49,12 @@ export class VespaStatusResultsPanel {
 
 	static showClusterStatus(extensionUri: vscode.Uri) {
 
-		const configEndpoint = vespaConfig.configEndpoint();
+		const cluster = vespaConfig.defaultCluster();
 
-		VespaV2Metrics.fetchDocInfo(configEndpoint)
+		VespaV2Metrics.fetchDocInfo(cluster.configEndpoint)
 			.then(docInfo => {
 				// outputChannel.appendLine("docInfo: " + JSON.stringify(docInfo, jsonMapReplacer));
-				VespaStatusResultsPanel.createOrShow(extensionUri, vespaConfig.defaultCluster(), docInfo, new Date());
+				VespaStatusResultsPanel.createOrShow(extensionUri, cluster, docInfo, new Date());
 			}).catch(error => {
 				showError("docCounts failed " + error + "\n" + error.stack);
 			});
@@ -127,7 +127,7 @@ export class VespaStatusResultsPanel {
 			<input type="radio" id="docCountTab" name="tabs" checked />
 			<label for="docCountTab" checked="checked">Vespa Cluster Documents</label>`;
 
-		if (vespaConfig.configId) {
+		if (this.clusterConfig) {
 			result += `
 			<input type="radio" id="clusterStatusTab" name="tabs" />
 			<label for="clusterStatusTab">Vespa Cluster Controller Status</label>`;
@@ -139,9 +139,9 @@ export class VespaStatusResultsPanel {
 		if (docTypeNames.length > 0) {
 			// Mutliple indices
 			result += `<table>`;
-			result += `<tr><th>Vespa Cluster:</th><td>${vespaConfig.default()}</td></tr>`;
-			result += `<tr><th>Query Endpoint:</th><td>${vespaConfig.queryEndpoint()}</td></tr>`;
-			result += `<tr><th>Timestamp:</th><td>${new Date(this.timestamp).toISOString()}</td></tr>`;
+			result += `<tr><th>Vespa Cluster:</th><td>${this.clusterConfig.name}</td></tr>`;
+			result += `<tr><th>Query Endpoint:</th><td>${this.clusterConfig.queryEndpoint}</td></tr>`;
+			result += `<tr><th>Timestamp:</th><td>${new Date(this.timestamp).toISOString().replace("T", " ")}</td></tr>`;
 			result += `</table>`;
 			// result += `<tr><th>YQL:</th><td><pre>${JSON.stringify(this.docCounts, null, 2)}</pre></td></tr>`;
 

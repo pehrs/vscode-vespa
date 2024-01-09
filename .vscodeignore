@@ -9,4 +9,6 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+**/*.test.ts
+**/*.test.js
 **/.history/

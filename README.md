@@ -16,6 +16,17 @@ The [VS Code Vespa extension](https://github.com/pehrs/vscode-vespa) provides ri
 <br/>
 </p>
 
+### Keybindings
+
+`vscode-vespa` has the following keybindings by default (You can change them in the keybinding editor if you need to):
+
+| Keybinding | Description |
+|------------|-------------|
+| ctrl+enter | Run the YQL request on the currently connected Vespa Cluster |
+| ctrl+home  | Open the Vespa Cluster Info panel |
+| ctrl+end   | Select Vespa cluster to connect to |
+
+
 ## Requirements
 
 [Vespa cluster running](https://docs.vespa.ai/en/getting-started.html) with the config and query endpoints available.
@@ -36,16 +47,26 @@ docker rm -f zipkin
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+The `vscode-vespa` extension is configured via a config file in `$HOME/.config/vscode-vespa/vespa-config.json`.
+If the config file is not present then `vscode-vespa` will create a default config:
 
-For example:
+```json
+{
+	"defaultCluster": "localhost",
+	"clusters": [
+		{
+			"name": "localhost",
+			"queryEndpoint": "http://localhost:8080/search",
+			"configEndpoint": "http://localhost:19071",
+			"zipkinEndpoint": "http://localhost:9411",
+		}
+	],
+	"httpTimeout": "2s",
+}
+```
 
-This extension contributes the following settings:
-
-* `vespaYql.configEndpoint`: Endpoint for Vespa Config Server. (default: http://127.0.0.1:19071)
-* `vespaYql.queryEndpoint`: Endpoint for Vespa YQL Queries. (default: http://127.0.0.1:8080/search)
-* `vespaYql.zipkinEndpoint`: (Optional) Endpoint for Zipkin traces. (default: http://127.0.0.1:9411)
-* `vespaYql.queryTimeout`: Timeout for Vespa YQL Queries. (default: 10s)
+You can edit the config file directly in vscode by selecting the 
+"Edit Vespa Cluster Configuration" command in the YQL editor menu.
 
 ## Known Issues
 

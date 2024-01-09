@@ -2,7 +2,7 @@
   "name": "vscode-vespa",
   "displayName": "vscode-vespa",
   "description": "Vespa AI Extension",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "publisher": "pehrs-com",
   "license": "SEE LICENSE IN LICENSE",
   "icon": "media/vespa.png",
@@ -55,6 +55,11 @@
         "command": "vscode-vespa.showClusterInfo",
         "title": "Show Vespa Cluser Info",
         "icon": "$(symbol-number)"
+      },
+      {
+        "command": "vscode-vespa.showSelectedClusterInfo",
+        "title": "Show Vespa Cluster Info",
+        "icon": "$(database)"
       },
       {
         "command": "vscode-vespa.selectConnection",
@@ -156,6 +161,10 @@
         {
           "command": "vscode-vespa.selectClusterAsDefault",
           "when": "view == vespaConfigView && viewItem == VESPA_CLUSTER"
+        },
+        {
+          "command": "vscode-vespa.showSelectedClusterInfo",
+          "when": "view == vespaConfigView && viewItem == VESPA_CLUSTER"
         }
       ],
       "view/title": [
@@ -184,7 +193,7 @@
       "vespa-explorer": [
         {
           "id": "vespaConfigView",
-          "name": "Vespa Configuration",
+          "name": "",
           "icon": "media/vespa.png",
           "contextualTitle": "Vespa Explorer"
         }

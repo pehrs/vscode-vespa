@@ -17,19 +17,19 @@ import {
 } from 'vscode-languageclient/node';
 
 import { vespaResponse2Zipkin } from './vespa_trace_parser';
-import { VespaConfigView } from './VespaConfigView';
+import { VespaConfigExplorer } from './VespaConfigExplorer';
 import { YqlResultsPanel } from './YqlResultsPanel';
 import { vespaConfig } from './VespaConfig';
 import { VespaStatusResultsPanel } from './VespaStatusResultsPanel';
 import { vespaClusterInfo } from './VespaClusterInfo';
-import { Schema } from './model/VespaSchemaConfig';
+import { VespaSchema } from './model/VespaSchemaConfig';
 
 
 let client: LanguageClient;
 
 // let vespaSchemaList: any = undefined;
 // let vespaClusterName: string = "";
-let vespaConfigView: VespaConfigView = undefined;
+let vespaConfigView: VespaConfigExplorer = undefined;
 
 export const outputChannel: vscode.OutputChannel = vscode.window.createOutputChannel("Vespa YQL");
 
@@ -67,7 +67,7 @@ export function activate(context: ExtensionContext) {
 	// 	welcome();
 	// }
 
-	vespaConfigView = new VespaConfigView(context);
+	vespaConfigView = new VespaConfigExplorer(context);
 
 
 	vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent) => {
@@ -164,7 +164,7 @@ function registerCompletions(context: ExtensionContext) {
 
 function getAllVespaSchemaNames(): string[] {
 	const schemas = vespaClusterInfo.defaultClusterSchemas();
-	const result: string[] = schemas.map((schema: Schema) => {
+	const result: string[] = schemas.map((schema: VespaSchema) => {
 		return schema.name;
 	});
 	return result;
