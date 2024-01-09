@@ -1,17 +1,16 @@
 import exp = require('constants');
 import { vespaConfig } from './VespaConfig';
 import { outputChannel, showError } from './extension';
-import { durationMs, jsonMapReplacer } from './utils';
+import { durationMs } from './utils';
 import { Schema, SchemaConfig } from './model/VespaSchemaConfig';
 import { StorageClusterConfig, VespaClusterList } from './model/VespaClusterList';
 import { VespaAppId } from './model/VespaAppId';
 import { XMLParser } from "fast-xml-parser";
-import { fetchJson, fetchWithTimeout } from './vespaUtils';
-import { getDocCountsFromMetrics } from './vespaMetrics';
+import {  fetchWithTimeout } from './vespaUtils';
 import { VespaServicesXml } from './model/VespaServicesXml';
 import { VespaHostsXml } from './model/VespaHostsXml';
 import { VespaStatus } from './model/VespaStatus';
-import { VespaV2Metric, VespaV2Metrics } from './model/VespaMetrics';
+import { VespaV2Metrics } from './model/VespaMetrics';
 import { VespaDocTypesInfo } from './model/VespaDocTypeInfo';
 
 
@@ -20,7 +19,6 @@ export class VespaClusterInfo {
 	clusterName: string = undefined;
 	appId: VespaAppId = undefined;
 	clusterList: VespaClusterList = undefined;
-	// <cluster.configId, Schema[]>
 	clusterSchemas: Map<string, Schema[]> = new Map();
 
 	defaultConfigId() {
@@ -84,63 +82,6 @@ export class VespaClusterInfo {
 	}
 
 
-	// fetchServiceXml(): Promise<VespaServicesXml> {
-	// 	const configEndpoint = vespaConfig.defaultCluster().configEndpoint;
-	// 	const parser = new XMLParser({
-	// 		ignoreAttributes: false,
-	// 		attributeNamePrefix: ""
-	// 	});
-	// 	return fetchWithTimeout(vespaContentURL(configEndpoint, "services.xml"))
-	// 		.then(urlResponse => urlResponse.text())
-	// 		.then(xmlText => VespaServicesXml.parseXml(xmlText));
-	// }
-
-	// async getDocCounts(clusterName: string) {
-
-	// 	const configEndpoint = vespaConfig.getCluster(clusterName).configEndpoint;
-
-	// 	const parser = new XMLParser({
-	// 		ignoreAttributes: false,
-	// 		attributeNamePrefix: ""
-	// 	});
-
-	// 	const appId = await VespaAppId.fetchAppId(vespaConfig);
-	// 	const status = await VespaStatus.fetchVespaStatus(vespaConfig);
-
-	// 	// const services_xml_old = await fetchWithTimeout(vespaContentURL(configEndpoint, "services.xml"))
-	// 	// 	.then(urlResponse => urlResponse.text())
-	// 	// 	.then(xmlText => parser.parse(xmlText));
-	// 	const services_xml = await VespaServicesXml.fetchServiceXml(vespaConfig, status, appId);
-
-	// 	// const hosts_xml = await fetchWithTimeout(vespaContentURL(configEndpoint, "hosts.xml"))
-	// 	// 	.then(urlResponse => urlResponse.text())
-	// 	// 	.then(xmlText => parser.parse(xmlText));
-	// 	const hosts_xml = await VespaHostsXml.fetchHostsXml(vespaConfig, status, appId);
-
-	// 	outputChannel.appendLine("services_xml: " + JSON.stringify(services_xml));
-	// 	outputChannel.appendLine("hosts_xml: " + JSON.stringify(hosts_xml));
-
-
-	// 	const v2Metrics = await VespaV2Metrics.fetchMetrics(vespaConfig);
-	// 	// outputChannel.appendLine("v2Metrics: " + JSON.stringify(v2Metrics));
-	// 	const docInfo = v2Metrics.getDocInfo(services_xml, hosts_xml);
-	// 	outputChannel.appendLine("DOC INFO: " + JSON.stringify(docInfo, jsonMapReplacer));
-
-
-	// 	const metricsUrl = new URL(`${configEndpoint}/metrics/v2/values`);
-	// 	return fetchJson(metricsUrl)
-	// 		.then(result => result.response)
-	// 		.then(metrics => {
-	// 			// outputChannel.appendLine("metrics: " + JSON.stringify(metrics));
-
-	// 			return Promise.resolve({
-	// 				status: "ok",
-	// 				clusterName: clusterName,
-	// 				docCounts: getDocCountsFromMetrics(metrics, services_xml, hosts_xml),
-	// 			});
-	// 		});
-	// }
-
 
 	async getDocInfo(): Promise<VespaDocTypesInfo> {
 
@@ -152,26 +93,12 @@ export class VespaClusterInfo {
 		const appId = await VespaAppId.fetchAppId(vespaConfig);
 		const status = await VespaStatus.fetchVespaStatus(vespaConfig);
 
-		// const services_xml_old = await fetchWithTimeout(vespaContentURL(configEndpoint, "services.xml"))
-		// 	.then(urlResponse => urlResponse.text())
-		// 	.then(xmlText => parser.parse(xmlText));
 		const services_xml = await VespaServicesXml.fetchServiceXml(vespaConfig, status, appId);
 
-		// const hosts_xml = await fetchWithTimeout(vespaContentURL(configEndpoint, "hosts.xml"))
-		// 	.then(urlResponse => urlResponse.text())
-		// 	.then(xmlText => parser.parse(xmlText));
 		const hosts_xml = await VespaHostsXml.fetchHostsXml(vespaConfig, status, appId);
 
-		outputChannel.appendLine("services_xml: " + JSON.stringify(services_xml));
-		outputChannel.appendLine("hosts_xml: " + JSON.stringify(hosts_xml));
-
-
-		// const v2Metrics = await VespaV2Metrics.fetchMetrics(vespaConfig);
-		// // outputChannel.appendLine("v2Metrics: " + JSON.stringify(v2Metrics));
-		// const docInfo = v2Metrics.getDocInfo(services_xml, hosts_xml);
-		// // outputChannel.appendLine("DOC INFO: " + JSON.stringify(docInfo, jsonMapReplacer));
-
-		// return Promise.resolve(docInfo);
+		//outputChannel.appendLine("services_xml: " + JSON.stringify(services_xml));
+		//outputChannel.appendLine("hosts_xml: " + JSON.stringify(hosts_xml));
 
 		return VespaV2Metrics.fetchMetrics(vespaConfig)
 			.then(v2Metrics => v2Metrics.getDocInfo(services_xml, hosts_xml));

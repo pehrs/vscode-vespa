@@ -1,11 +1,8 @@
 import { homedir } from 'os';
 import fs = require('fs');
-import * as path from 'path';
-import { outputChannel } from './extension';
 
-import { XMLParser } from "fast-xml-parser";
-import { fetchJson, fetchWithTimeout } from './vespaUtils';
-import { getDocCountsFromMetrics } from './vespaMetrics';
+import { outputChannel } from './extension';
+import { fetchWithTimeout } from './vespaUtils';
 import { durationMs } from './utils';
 
 export interface VespaClusterConfig {

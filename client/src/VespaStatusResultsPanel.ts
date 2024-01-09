@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { defaultResult, outputChannel, showError } from './extension';
+import { showError } from './extension';
 import { VespaClusterConfig, vespaConfig } from './VespaConfig';
 import { fmtBytes, fmtNum, formatNumber, getNonce, jsonMapReplacer } from './utils';
 import { time } from 'console';
@@ -48,23 +48,16 @@ export class VespaStatusResultsPanel {
 		VespaStatusResultsPanel.currentPanel = new VespaStatusResultsPanel(panel, extensionUri, clusterConfig, docInfo, timestamp);
 	}
 
-	static showClusterStatus(extensionUri: vscode.Uri) {
 
+	static showClusterStatus(extensionUri: vscode.Uri) {
+		
 		vespaClusterInfo.getDocInfo()
 			.then(docInfo => {
-				outputChannel.appendLine("docInfo: " + JSON.stringify(docInfo, jsonMapReplacer));
+				// outputChannel.appendLine("docInfo: " + JSON.stringify(docInfo, jsonMapReplacer));
 				VespaStatusResultsPanel.createOrShow(extensionUri, vespaConfig.defaultCluster(), docInfo, new Date());
 			}).catch(error => {
 				showError("docCounts failed " + error + "\n" + error.stack);
 			});
-
-		// vespaClusterInfo.getDocCounts(clusterName)
-		// 	.then(docCounts => {
-		// 		outputChannel.appendLine("docCounts: " + JSON.stringify(docCounts));
-		// 		VespaStatusResultsPanel.createOrShow(extensionUri, vespaConfig.getCluster(clusterName), docCounts, new Date());
-		// 	}).catch(error => {
-		// 		showError("docCounts failed " + error + "\n" + error.stack);
-		// 	});
 	}
 
 

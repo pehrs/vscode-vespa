@@ -17,13 +17,12 @@ import {
 } from 'vscode-languageclient/node';
 
 import { vespaResponse2Zipkin } from './vespa_trace_parser';
-import { VespaConfigView } from './vespaConfigView';
+import { VespaConfigView } from './VespaConfigView';
 import { YqlResultsPanel } from './YqlResultsPanel';
 import { vespaConfig } from './VespaConfig';
 import { VespaStatusResultsPanel } from './VespaStatusResultsPanel';
-import { VespaClusterInfo, vespaClusterInfo } from './VespaClusterInfo';
+import { vespaClusterInfo } from './VespaClusterInfo';
 import { Schema } from './model/VespaSchemaConfig';
-import { jsonMapReplacer } from './utils';
 
 
 let client: LanguageClient;

@@ -13,5 +13,12 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
     },
-    "eslint.workingDirectories": [{ "mode": "auto" }],
+    "eslint.workingDirectories": [
+        {
+            "mode": "auto"
+        }
+    ],
+    // "mochaExplorer.require": "ts-node/register",
+    "mochaExplorer.require": "source-map-support/register",
+    "mochaExplorer.files": "client/out/**/*.test.js",
 }

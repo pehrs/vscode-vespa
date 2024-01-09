@@ -68,6 +68,18 @@
         "when": "editorLangId == yql",
         "key": "ctrl+enter",
         "mac": "cmd+enter"
+      },
+      {
+        "command": "vscode-vespa.showClusterInfo",
+        "when": "editorLangId == yql",
+        "key": "ctrl+home",
+        "mac": "cmd+home"
+      },
+      {
+        "command": "vscode-vespa.selectConnection",
+        "when": "editorLangId == yql",
+        "key": "ctrl+end",
+        "mac": "cmd+end"
       }
     ],
     "menus": {
@@ -209,7 +221,7 @@
     "watch": "tsc -b -w",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "test": "sh ./scripts/e2e.sh"
+    "test": "mocha client/out/test/runTests.js"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
@@ -226,6 +238,7 @@
   },
   "dependencies": {
     "fast-xml-parser": "^4.3.2",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "source-map-support": "^0.5.21"
   }
 }

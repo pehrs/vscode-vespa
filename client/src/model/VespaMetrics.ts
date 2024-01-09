@@ -1,15 +1,10 @@
 import { VespaConfig } from '../VespaConfig';
 import { fetchWithTimeout } from '../vespaUtils';
-import { VespaAppId } from './VespaAppId';
 import { VespaDocInfo, VespaDocTypesInfo } from './VespaDocTypeInfo';
 import { VespaHostsXml } from './VespaHostsXml';
 import { VespaServicesXml } from './VespaServicesXml';
-import { VespaStatus } from './VespaStatus';
 
 
-
-// const metricsUrl = new URL(`${configEndpoint}/metrics/v2/values`);
-const metricsConfigPath = "/metrics/v2/values";
 
 export class VespaV2Metric {
 

@@ -1,88 +1,89 @@
 
 import { VespaServicesXml } from './VespaServicesXml';
-import { servicexXmlWith1Node } from './testFixtures/serviceXmlFixtures';
+import { complexServiceXml, largeServiceXml, servicesXmlWith2ContentNodes, servicexXmlWith1Node } from './testFixtures/serviceXmlFixtures';
 
 import { XMLParser } from 'fast-xml-parser';
 
+import assert = require('assert');
 
-console.log("Service XML Tests!!!");
+describe('VespaHostXml', function () {
+	describe('given a parsed services.xml from a single node cluster', function () {
+		it('should return valid VespaServiceXml object', function () {
 
-// test('given a parsed services.xml from a single node cluster produces the VespaServiceXml object', () => {
+			const servicesXml = VespaServicesXml.parse(servicexXmlWith1Node);
+			assert.equal(servicesXml.adminConfig, undefined);
+			assert.equal(servicesXml.containerConfigs[0].containerId, 'text_search');
+			assert.equal(servicesXml.containerConfigs[0].nodes.length, 1);
+			assert.equal(servicesXml.contentConfig.contentId, "msmarco");
 
-// 	const servicesXml = VespaServicesXml.parse(servicexXmlWith1Node);
-// 	expect(servicesXml.adminConfig).toBe(undefined);
-// 	expect(servicesXml.containerConfigs[0].containerId).toBe('text_search');
-// 	expect(servicesXml.containerConfigs[0].nodes.length).toBe(1);
-// 	expect(servicesXml.contentConfig.contentId).toBe("msmarco");
+			assert.equal(servicesXml.contentConfig.getAllContentNodes().length, 1);
+		});
+	});
 
-// 	expect(servicesXml.contentConfig.getAllContentNodes().length).toBe(1);
+	describe('given a parsed services.xml from a cluster with 2 content nodes', () => {
+		it('should return VespaServiceXml object', function () {
+			const servicesXml = VespaServicesXml.parse(servicesXmlWith2ContentNodes);
+			// console.log("serviceXml: " + JSON.stringify(servicesXml));
+			assert.equal(servicesXml.adminConfig.adminserver.hostalias, 'config0');
+			assert.equal(servicesXml.containerConfigs[0].containerId, 'text_search');
+			assert.equal(servicesXml.containerConfigs[0].nodes.length, 1);
+			assert.equal(servicesXml.contentConfig.contentId, "msmarco");
+			assert.equal(servicesXml.contentConfig.getAllContentNodes().length, 2);
+		});
+	});
 
-// });
+	describe('given a complex services.xml', () => {
+		it('should return VespaServiceXml object', function () {
 
-// test('given a parsed services.xml from a cluster with 2 content nodes produces the VespaServiceXml object', () => {
+			const parser = new XMLParser({
+				ignoreAttributes: false,
+				attributeNamePrefix: ""
+			});
 
-// 	const servicesXml = VespaServicesXml.parse(servicesXmlWith2ContentNodes);
-// 	// console.log("serviceXml: " + JSON.stringify(servicesXml));
-// 	expect(servicesXml.adminConfig.adminserver.hostalias).toBe('config0');
-// 	expect(servicesXml.containerConfigs[0].containerId).toBe('text_search');
-// 	expect(servicesXml.containerConfigs[0].nodes.length).toBe(1);
-// 	expect(servicesXml.contentConfig.contentId).toBe("msmarco");
-// 	expect(servicesXml.contentConfig.getAllContentNodes().length).toBe(2);
+			const serviceXmlObj = parser.parse(complexServiceXml);
 
-// });
+			// console.log("serviceXml: " + JSON.stringify(serviceXmlObj));
 
+			const servicesXml = VespaServicesXml.parse(serviceXmlObj);
 
-// test('given a complex services.xml produce the VespaServiceXml object', () => {
+			assert.equal(servicesXml.adminConfig.adminserver.hostalias, 'config0');
 
-// 	const parser = new XMLParser({
-// 		ignoreAttributes: false,
-// 		attributeNamePrefix: ""
-// 	});
+			assert.equal(servicesXml.containerConfigs[0].containerId, 'feed');
+			assert.equal(servicesXml.containerConfigs[0].nodes.length, 2);
+			assert.equal(servicesXml.containerConfigs[0].documentApi, true);
+			assert.equal(servicesXml.containerConfigs[0].searchApi, false);
 
-// 	const serviceXmlObj = parser.parse(complexServiceXml);
+			assert.equal(servicesXml.containerConfigs[1].containerId, 'query');
+			assert.equal(servicesXml.containerConfigs[1].nodes.length, 2);
+			assert.equal(servicesXml.containerConfigs[1].documentApi, false);
+			assert.equal(servicesXml.containerConfigs[1].searchApi, true);
 
-// 	// console.log("serviceXml: " + JSON.stringify(serviceXmlObj));
+			assert.equal(servicesXml.contentConfig.contentId, "music");
+			assert.equal(servicesXml.contentConfig.getAllContentNodes().length, 3);
+		});
+	});
 
-// 	const servicesXml = VespaServicesXml.parse(serviceXmlObj);
+	describe('given a large services.xml with content groups', () => {
+		it('should return VespaServiceXml object', function () {
 
+			const servicesXml = VespaServicesXml.parseXml(largeServiceXml);
 
-// 	expect(servicesXml.adminConfig.adminserver.hostalias).toBe('config0');
+			assert.equal(servicesXml.adminConfig.adminserver.hostalias, 'configa-8wst');
 
-// 	expect(servicesXml.containerConfigs[0].containerId).toBe('feed');
-// 	expect(servicesXml.containerConfigs[0].nodes.length).toBe(2);
-// 	expect(servicesXml.containerConfigs[0].documentApi).toBe(true);
-// 	expect(servicesXml.containerConfigs[0].searchApi).toBe(false);
+			assert.equal(servicesXml.containerConfigs[0].containerId, 'query');
+			assert.equal(servicesXml.containerConfigs[0].nodes.length, 30);
+			assert.equal(servicesXml.containerConfigs[0].documentApi, false);
+			assert.equal(servicesXml.containerConfigs[0].searchApi, true);
 
-// 	expect(servicesXml.containerConfigs[1].containerId).toBe('query');
-// 	expect(servicesXml.containerConfigs[1].nodes.length).toBe(2);
-// 	expect(servicesXml.containerConfigs[1].documentApi).toBe(false);
-// 	expect(servicesXml.containerConfigs[1].searchApi).toBe(true);
+			assert.equal(servicesXml.containerConfigs[1].containerId, 'feed');
+			assert.equal(servicesXml.containerConfigs[1].nodes.length, 2);
+			assert.equal(servicesXml.containerConfigs[1].documentApi, true);
+			assert.equal(servicesXml.containerConfigs[1].searchApi, false);
 
-// 	expect(servicesXml.contentConfig.contentId).toBe("music");
-// 	expect(servicesXml.contentConfig.getAllContentNodes().length).toBe(3);
-
-// });
-
-
-// test('given a large services.xml with content groups produce the VespaServiceXml object', () => {
-
-// 	const servicesXml = VespaServicesXml.parseXml(largeServiceXml);
-
-// 	expect(servicesXml.adminConfig.adminserver.hostalias).toBe('configa-8wst');
-
-// 	expect(servicesXml.containerConfigs[0].containerId).toBe('query');
-// 	expect(servicesXml.containerConfigs[0].nodes.length).toBe(30);
-// 	expect(servicesXml.containerConfigs[0].documentApi).toBe(false);
-// 	expect(servicesXml.containerConfigs[0].searchApi).toBe(true);
-
-// 	expect(servicesXml.containerConfigs[1].containerId).toBe('feed');
-// 	expect(servicesXml.containerConfigs[1].nodes.length).toBe(2);
-// 	expect(servicesXml.containerConfigs[1].documentApi).toBe(true);
-// 	expect(servicesXml.containerConfigs[1].searchApi).toBe(false);
-
-// 	expect(servicesXml.contentConfig.contentId).toBe("content");
-// 	expect(servicesXml.contentConfig.nodes).toBe(undefined);
-// 	expect(servicesXml.contentConfig.groupConfig.groups.length).toBe(32);
-// 	expect(servicesXml.contentConfig.getAllContentNodes().length).toBe(128);
-
-// });
+			assert.equal(servicesXml.contentConfig.contentId, "content");
+			assert.equal(servicesXml.contentConfig.nodes, undefined);
+			assert.equal(servicesXml.contentConfig.groupConfig.groups.length, 32);
+			assert.equal(servicesXml.contentConfig.getAllContentNodes().length, 128);
+		});
+	});
+});
