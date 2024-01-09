@@ -1,5 +1,4 @@
-import { VespaConfig } from '../VespaConfig';
-import { outputChannel } from '../extension';
+import { vespaConfig } from '../VespaConfig';
 import { fetchWithTimeout } from '../vespaUtils';
 import { VespaStatus } from './VespaStatus';
 
@@ -25,12 +24,12 @@ export class VespaAppId {
 	}
 
 
-	static fetchAppId(vespaConfig: VespaConfig): Promise<VespaAppId> {
-		const configEndpoint: string = vespaConfig.configEndpoint();
+	static fetchAppId(configEndpoint: string): Promise<VespaAppId> {
 		const appIdUrl = `${configEndpoint}/config/v1/cloud.config.application-id`;
+		const timeoutMs = vespaConfig.httpTimeoutMs();
 
-		outputChannel.appendLine("Getting Vespa config from " + configEndpoint);
-		return fetchWithTimeout(appIdUrl, vespaConfig.queryTimeoutMs())
+		// outputChannel.appendLine("Getting Vespa config from " + configEndpoint);
+		return fetchWithTimeout(appIdUrl, timeoutMs)
 			.then(response => response.json()
 				.then((v:any) => new VespaAppId(v.tenant, v.application, v.instance)));
 	}

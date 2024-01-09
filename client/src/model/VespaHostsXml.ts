@@ -2,7 +2,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { VespaAppId } from './VespaAppId';
 import { fetchWithTimeout } from '../vespaUtils';
 import { VespaStatus } from './VespaStatus';
-import { VespaConfig } from '../VespaConfig';
+import { vespaConfig } from '../VespaConfig';
 
 export class VespaHostsXml {
 
@@ -49,12 +49,14 @@ export class VespaHostsXml {
 	}
 
 
-	static fetchHostsXml(vespaConfig: VespaConfig, status: VespaStatus, appId: VespaAppId): Promise<VespaHostsXml> {
+	static fetchHostsXml(configEndpoint: string, status: VespaStatus, appId: VespaAppId): Promise<VespaHostsXml> {
+		const timeoutMs = vespaConfig.httpTimeoutMs();
+
 		const parser = new XMLParser({
 			ignoreAttributes: false,
 			attributeNamePrefix: ""
 		});
-		return fetchWithTimeout(appId.getVespaContentURL(vespaConfig.configEndpoint(), status, "hosts.xml"), vespaConfig.queryTimeoutMs())
+		return fetchWithTimeout(appId.getVespaContentURL(configEndpoint, status, "hosts.xml"), timeoutMs)
 			.then(urlResponse => urlResponse.text())
 			.then(xmlText => VespaHostsXml.parseXml(xmlText));
 	}

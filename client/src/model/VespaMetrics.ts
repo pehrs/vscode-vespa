@@ -1,8 +1,11 @@
-import { VespaConfig } from '../VespaConfig';
+import { XMLParser } from 'fast-xml-parser';
+import { vespaConfig } from '../VespaConfig';
 import { fetchWithTimeout } from '../vespaUtils';
 import { VespaDocInfo, VespaDocTypesInfo } from './VespaDocTypeInfo';
 import { VespaHostsXml } from './VespaHostsXml';
 import { VespaServicesXml } from './VespaServicesXml';
+import { VespaAppId } from './VespaAppId';
+import { VespaStatus } from './VespaStatus';
 
 
 
@@ -127,10 +130,35 @@ export class VespaV2Metrics {
 	}
 
 
-	static fetchMetrics(vespaConfig: VespaConfig): Promise<VespaV2Metrics> {
-		const metricsUrl = new URL(`${vespaConfig.configEndpoint()}/metrics/v2/values`);
-		return fetchWithTimeout(metricsUrl, vespaConfig.queryTimeoutMs())
+	static fetchMetrics(configEndpoint: string): Promise<VespaV2Metrics> {
+		const timeoutMs = vespaConfig.httpTimeoutMs();
+
+		const metricsUrl = new URL(`${configEndpoint}/metrics/v2/values`);
+		return fetchWithTimeout(metricsUrl, timeoutMs)
 			.then(urlResponse => urlResponse.json())
 			.then(json => VespaV2Metrics.parse(json));
 	}
+
+	static async fetchDocInfo(configEndpoint: string): Promise<VespaDocTypesInfo> {
+
+		const parser = new XMLParser({
+			ignoreAttributes: false,
+			attributeNamePrefix: ""
+		});
+
+		const appId = await VespaAppId.fetchAppId(configEndpoint);
+		const status = await VespaStatus.fetchVespaStatus(configEndpoint);
+
+		const services_xml = await VespaServicesXml.fetchServiceXml(configEndpoint, status, appId);
+
+		const hosts_xml = await VespaHostsXml.fetchHostsXml(configEndpoint, status, appId);
+
+		//outputChannel.appendLine("services_xml: " + JSON.stringify(services_xml));
+		//outputChannel.appendLine("hosts_xml: " + JSON.stringify(hosts_xml));
+
+		return VespaV2Metrics.fetchMetrics(configEndpoint)
+			.then(v2Metrics => v2Metrics.getDocInfo(services_xml, hosts_xml));
+	}
+
+
 }

@@ -3,7 +3,7 @@ import { metrics2ContentNodes } from './testFixtures/metricsFixtures';
 
 import assert = require('assert');
 
-describe('VespaHostXml', function () {
+describe('VespaMetrics', function () {
 	describe('given a parsed services.xml from a single node cluster', function () {
 		it('should return valid VespaServiceXml object', function () {
 		});

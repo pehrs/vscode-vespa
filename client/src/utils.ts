@@ -1,3 +1,4 @@
+import { time } from 'console';
 
 
 export function getNonce() {
@@ -41,16 +42,29 @@ export function formatNumber(value) {
 	return Math.round(value).toLocaleString().replace(/,/g, " ");
 }
 
-export function durationSeconds(timeExpr: string): number {
-	const match = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(timeExpr);
-	return 3600 * (parseInt(match[1]) || 0)
-		+ 60 * (parseInt(match[2]) || 0)
-		+ (parseInt(match[3]) || 0);
-}
+// export function durationSeconds(timeExpr: string): number {
+// 	const match = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(timeExpr.replace(" ", ""));
+// 	return 3600 * (parseInt(match[1]) || 0)
+// 		+ 60 * (parseInt(match[2]) || 0)
+// 		+ (parseInt(match[3]) || 0);
+// }
+
 
 export function durationMs(timeExpr: string): number {
-	return 1000 * durationSeconds(timeExpr);
+	const match = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(timeExpr.replace(" ", ""));
+	if (match && match.length > 1) {
+		return  3600000 * (parseInt(match[1]) || 0)
+			+ 60000 * (parseInt(match[2]) || 0)
+			+ (1000 * parseInt(match[3]) || 0);
+	} else {
+		return Number.parseInt(timeExpr);
+	}
 }
+
+
+// export function durationSinMs(timeExpr: string): number {
+// 	return 1000 * durationSeconds(timeExpr);
+// }
 
 
 const mapToObj = m => {

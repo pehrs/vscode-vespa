@@ -1,5 +1,4 @@
-import { VespaConfig } from '../VespaConfig';
-import { durationMs } from '../utils';
+import { vespaConfig } from '../VespaConfig';
 import { fetchWithTimeout } from '../vespaUtils';
 
 export class VespaStatus {
@@ -15,8 +14,10 @@ export class VespaStatus {
 
 
 	// http://localhost:19071/status
-	static fetchVespaStatus(vespaConfig: VespaConfig): Promise<VespaStatus> {	
-		return fetchWithTimeout(`${vespaConfig.configEndpoint()}/status`, vespaConfig.queryTimeoutMs())
+	static fetchVespaStatus(configEndpoint: string): Promise<VespaStatus> {	
+		const timeoutMs = vespaConfig.httpTimeoutMs();
+
+		return fetchWithTimeout(`${configEndpoint}/status`, timeoutMs)
 			.then(urlResponse => urlResponse.json())
 			.then(json => new VespaStatus(json));
 	}

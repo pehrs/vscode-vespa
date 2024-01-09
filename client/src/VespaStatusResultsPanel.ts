@@ -1,11 +1,9 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import { showError } from './extension';
 import { VespaClusterConfig, vespaConfig } from './VespaConfig';
-import { fmtBytes, fmtNum, formatNumber, getNonce, jsonMapReplacer } from './utils';
-import { time } from 'console';
-import { vespaClusterInfo } from './VespaClusterInfo';
+import { fmtBytes, fmtNum, formatNumber, getNonce } from './utils';
 import { VespaDocInfo, VespaDocTypeInfo, VespaDocTypesInfo } from './model/VespaDocTypeInfo';
+import { VespaV2Metrics } from './model/VespaMetrics';
 
 //
 // This panel has two modes one for a single index/doctype view and one for multiple index/doctype view
@@ -50,8 +48,10 @@ export class VespaStatusResultsPanel {
 
 
 	static showClusterStatus(extensionUri: vscode.Uri) {
-		
-		vespaClusterInfo.getDocInfo()
+
+		const configEndpoint = vespaConfig.configEndpoint();
+
+		VespaV2Metrics.fetchDocInfo(configEndpoint)
 			.then(docInfo => {
 				// outputChannel.appendLine("docInfo: " + JSON.stringify(docInfo, jsonMapReplacer));
 				VespaStatusResultsPanel.createOrShow(extensionUri, vespaConfig.defaultCluster(), docInfo, new Date());

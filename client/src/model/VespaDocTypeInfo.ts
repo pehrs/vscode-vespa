@@ -1,5 +1,3 @@
-import G = require('glob');
-
 export class VespaDocInfo {
 	hostname: string;
 	docCount: number;

@@ -1,7 +1,6 @@
 import { homedir } from 'os';
 import fs = require('fs');
 
-import { outputChannel } from './extension';
 import { fetchWithTimeout } from './vespaUtils';
 import { durationMs } from './utils';
 
@@ -15,7 +14,7 @@ export interface VespaClusterConfig {
 export interface VespaRootConfig {
 	defaultCluster: string;
 	clusters: VespaClusterConfig[];
-	queryTimeout: string;
+	httpTimeout: string;
 }
 
 const defaultConfig: VespaRootConfig = {
@@ -28,7 +27,7 @@ const defaultConfig: VespaRootConfig = {
 			zipkinEndpoint: "http://localhost:9411",
 		}
 	],
-	queryTimeout: "10s",
+	httpTimeout: "2s",
 };
 
 const configDir = `${homedir()}/.config/vscode-vespa`;
@@ -54,11 +53,11 @@ export class VespaConfig {
 	queryEndpoint(): string {
 		return this.defaultCluster().queryEndpoint;
 	}
-	queryTimeout(): string {
-		return this.vespaConfig.queryTimeout;
+	httpTimeout(): string {
+		return this.vespaConfig.httpTimeout;
 	}
-	queryTimeoutMs(): number {
-		return durationMs(this.queryTimeout());
+	httpTimeoutMs(): number {
+		return durationMs(this.httpTimeout());
 	}
 	configEndpoint(): string {
 		return this.defaultCluster().configEndpoint;
@@ -111,45 +110,13 @@ export class VespaConfig {
 		const configFile = `${configDir}/vespa-config.json`;
 
 		if (!fs.existsSync(configFile)) {
-			outputChannel.appendLine(`No config dir, creating ${configDir}`);
+			// outputChannel.appendLine(`No config dir, creating ${configDir}`);
 			fs.mkdirSync(configDir, { recursive: true });
 		}
-		outputChannel.appendLine(`Saving Vespa config to ${configFile}`);
+		// outputChannel.appendLine(`Saving Vespa config to ${configFile}`);
 		fs.writeFileSync(configFile, JSON.stringify(this.vespaConfig, null, 2));
 	}
-
-	// async getDocCounts(clusterName: string) {
-
-	// 	const configEndpoint = this.getCluster(clusterName).configEndpoint;
-
-	// 	const parser = new XMLParser({
-	// 		ignoreAttributes: false,
-	// 		attributeNamePrefix: ""
-	// 	});
-
-	// 	const services_xml = await fetchWithTimeout(vespaContentURL(configEndpoint, "services.xml"))
-	// 		.then(urlResponse => urlResponse.text())
-	// 		.then(xmlText => parser.parse(xmlText));
-	// 	const hosts_xml = await fetchWithTimeout(vespaContentURL(configEndpoint, "hosts.xml"))
-	// 		.then(urlResponse => urlResponse.text())
-	// 		.then(xmlText => parser.parse(xmlText));
-
-	// 	//outputChannel.appendLine("services_xml: " + JSON.stringify(services_xml));
-	// 	//outputChannel.appendLine("hosts_xml: " + JSON.stringify(hosts_xml));
-
-	// 	const metricsUrl = new URL(`${configEndpoint}/metrics/v2/values`);
-	// 	return fetchJson(metricsUrl)
-	// 		.then(result => result.response)
-	// 		.then(metrics => {
-	// 			// outputChannel.appendLine("metrics: " + JSON.stringify(metrics));
-
-	// 			return Promise.resolve({
-	// 				status: "ok",
-	// 				clusterName: clusterName,
-	// 				docCounts: getDocCountsFromMetrics(metrics, services_xml, hosts_xml),
-	// 			});
-	// 		});
-	// }
+	
 }
 
 export const vespaConfig = new VespaConfig();

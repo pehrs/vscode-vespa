@@ -1,5 +1,3 @@
-import { VespaAppId } from './model/VespaAppId';
-import { VespaStatus } from './model/VespaStatus';
 
 export async function fetchWithTimeout(resource, timeout: number = 2000): Promise<Response> {
     const options = { timeout: timeout };

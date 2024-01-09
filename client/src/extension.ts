@@ -463,11 +463,11 @@ function welcome() {
 async function runYqlQuery(context: ExtensionContext, yql: string): Promise<void> {
 
 	const queryEndpoint: string = vespaConfig.queryEndpoint();
-	const queryTimeout: string = vespaConfig.queryTimeout();
+	const timeout: string = vespaConfig.httpTimeout();
 
 	const encodedYql = encodeURI(yql);
-	const url = `${queryEndpoint}/?timeout=${queryTimeout}`;
-	outputChannel.appendLine(`Calling ${queryEndpoint}`); // /?timeout=${queryTimeout}`);
+	const url = `${queryEndpoint}/?timeout=${timeout}`;
+	outputChannel.appendLine(`Calling ${queryEndpoint}`);
 
 	const queryTimestamp: string = new Date().toISOString();
 

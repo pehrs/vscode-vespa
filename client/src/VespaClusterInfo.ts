@@ -1,17 +1,10 @@
 import exp = require('constants');
 import { vespaConfig } from './VespaConfig';
 import { outputChannel, showError } from './extension';
-import { durationMs } from './utils';
 import { Schema, SchemaConfig } from './model/VespaSchemaConfig';
 import { StorageClusterConfig, VespaClusterList } from './model/VespaClusterList';
 import { VespaAppId } from './model/VespaAppId';
-import { XMLParser } from "fast-xml-parser";
-import {  fetchWithTimeout } from './vespaUtils';
-import { VespaServicesXml } from './model/VespaServicesXml';
-import { VespaHostsXml } from './model/VespaHostsXml';
-import { VespaStatus } from './model/VespaStatus';
-import { VespaV2Metrics } from './model/VespaMetrics';
-import { VespaDocTypesInfo } from './model/VespaDocTypeInfo';
+import { fetchWithTimeout } from './vespaUtils';
 
 
 export class VespaClusterInfo {
@@ -32,7 +25,7 @@ export class VespaClusterInfo {
 	fetchClusterList(): Promise<VespaClusterList> {
 		const configEndpoint: string = vespaConfig.configEndpoint();
 		const clusterListUrl = `${configEndpoint}/config/v2/tenant/${this.appId.tenant}/application/${this.appId.application}/cloud.config.cluster-list`;
-		const timeout = durationMs(vespaConfig.queryTimeout());
+		const timeout = vespaConfig.httpTimeoutMs();
 
 		outputChannel.appendLine("Getting Cluster List from " + configEndpoint);
 		return fetchWithTimeout(clusterListUrl, timeout)
@@ -46,7 +39,7 @@ export class VespaClusterInfo {
 		const configEndpoint: string = vespaConfig.configEndpoint();
 		const configid = storageConfig.configid;
 		const schemaListUrl = `${configEndpoint}/config/v2/tenant/${this.appId.tenant}/application/${this.appId.application}/search.config.schema-info/${configid}/search/cluster.${configid}`;
-		const timeout = durationMs(vespaConfig.queryTimeout());
+		const timeout = vespaConfig.httpTimeoutMs();
 
 		outputChannel.appendLine(`Getting Schemas for ${configid} from ${configEndpoint}`);
 		return fetchWithTimeout(schemaListUrl, timeout)
@@ -60,7 +53,7 @@ export class VespaClusterInfo {
 	refresh(): Promise<void> {
 		if (this.clusterName == undefined || this.clusterName !== vespaConfig.vespaConfig.defaultCluster) {
 			this.clusterName = vespaConfig.vespaConfig.defaultCluster;
-			return VespaAppId.fetchAppId(vespaConfig)
+			return VespaAppId.fetchAppId(vespaConfig.configEndpoint())
 				.then(appId => this.appId = appId)
 				.then(appId => {
 					this.fetchClusterList()
@@ -80,30 +73,6 @@ export class VespaClusterInfo {
 		}
 		return Promise.resolve();
 	}
-
-
-
-	async getDocInfo(): Promise<VespaDocTypesInfo> {
-
-		const parser = new XMLParser({
-			ignoreAttributes: false,
-			attributeNamePrefix: ""
-		});
-
-		const appId = await VespaAppId.fetchAppId(vespaConfig);
-		const status = await VespaStatus.fetchVespaStatus(vespaConfig);
-
-		const services_xml = await VespaServicesXml.fetchServiceXml(vespaConfig, status, appId);
-
-		const hosts_xml = await VespaHostsXml.fetchHostsXml(vespaConfig, status, appId);
-
-		//outputChannel.appendLine("services_xml: " + JSON.stringify(services_xml));
-		//outputChannel.appendLine("hosts_xml: " + JSON.stringify(hosts_xml));
-
-		return VespaV2Metrics.fetchMetrics(vespaConfig)
-			.then(v2Metrics => v2Metrics.getDocInfo(services_xml, hosts_xml));
-	}
-
 
 }
 
