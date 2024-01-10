@@ -2,7 +2,7 @@
   "name": "vscode-vespa",
   "displayName": "vscode-vespa",
   "description": "Vespa AI Extension",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "publisher": "pehrs-com",
   "license": "SEE LICENSE IN LICENSE",
   "icon": "media/vespa.png",
@@ -22,7 +22,8 @@
   ],
   "pricing": "Free",
   "activationEvents": [
-    "onLanguage:yql"
+    "onLanguage:yql",
+    "onLanguage:sd"
   ],
   "main": "./client/out/extension",
   "contributes": {
@@ -65,6 +66,11 @@
         "command": "vscode-vespa.selectConnection",
         "title": "Connect to cluster",
         "icon": "$(database)"
+      },
+      {
+        "command": "vscode-vespa.openSelectedFile",
+        "title": "Download file",
+        "icon": "$(file)"
       }
     ],
     "keybindings": [
@@ -165,6 +171,10 @@
         {
           "command": "vscode-vespa.showSelectedClusterInfo",
           "when": "view == vespaConfigView && viewItem == VESPA_CLUSTER"
+        },
+        {
+          "command": "vscode-vespa.openSelectedFile",
+          "when": "view == vespaConfigView && viewItem == VESPA_EXPLORER_APP_FILE"
         }
       ],
       "view/title": [
@@ -208,13 +218,28 @@
         "extensions": [
           ".yql"
         ]
+      },
+      {
+        "id": "sd",
+        "aliases": [
+          "sd"
+        ],
+        "extensions": [
+          ".sd"
+        ]
       }
+
     ],
     "grammars": [
       {
         "language": "yql",
-        "scopeName": "source.json",
-        "path": "./syntaxes/json.tmLanguage.json"
+        "scopeName": "source.yql",
+        "path": "./syntaxes/yql.tmLanguage.json"
+      },
+      {
+        "language": "sd",
+        "scopeName": "source.sd",
+        "path": "./syntaxes/sd.tmLanguage.json"
       }
     ],
     "snippets": [
@@ -230,7 +255,7 @@
     "watch": "tsc -b -w",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "test": "mocha client/out/test/runTests.js"
+    "test": "mocha client/out/**/*.test.js"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",

@@ -5,16 +5,21 @@ The [VS Code Vespa extension](https://github.com/pehrs/vscode-vespa) provides ri
 
 ## Features
 
-* Run YQL requests against your vespa cluster and present the result in a webview table..
+<p align="center">
+<img src="media/vscode-vespa.gif" width=75%>
+<br/>
+</p>
+
+* Run YQL requests against your vespa clusters and present the result in a webview table..
 
 * Simple completion support is given for request snippets and the YQL query string.
 
 * Optionally render a zipkin view if you enable tracing for your YQL request.
 
-<p align="center">
-<img src="media/vscode-vespa.gif" width=75%>
-<br/>
-</p>
+* Vespa Explorer 
+
+  * Explore and download application files.
+
 
 ### Keybindings
 
@@ -70,25 +75,29 @@ You can edit the config file directly in vscode by selecting the
 
 ## Known Issues
 
-### YQL Syntax
+### YQL (.yql) Syntax
 
-The syntax is just reusing the [vscode JSON syntax](https://github.com/microsoft/vscode/blob/main/extensions/json/syntaxes/JSON.tmLanguage.json) 
-until we have time to create a custom YQL syntax.
+This is work in progress. 
+
+We have started working on this by copying the [vscode JSON syntax](https://github.com/microsoft/vscode/blob/main/extensions/json/syntaxes/JSON.tmLanguage.json) to a new [yql textmate syntax file](syntaxes/yql.tmLanguage.json) and added some simple coloring for the `yql` parameter.
+
+### Schema (.sd) Syntax
+
+This is work in progress. 
+
+We have started working on this in a new [yql textmate syntax file](syntaxes/sd.tmLanguage.json)
 
 ### Zipkin traces
 The zipkin traces are work-in-progress as the Vespa trace format is quite hard to parse.
 We have use the [TransformVespaTrace.jsx](https://github.com/vespa-engine/vespa/blob/master/client/js/app/src/app/pages/querybuilder/TransformVespaTrace.jsx) 
 from [Vespa](https://github.com/vespa-engine/vespa) as the "source of truth" on how to parse the Vespa traces.
 
-### Output view
-
-The results output view will not be saved if you close vscode.
 
 ### Language Server
 
 In the source code there is a beginings of a 
 [language server](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide) in the [server/](server/) dir.
-This is not enabled as the features it gives, at the moment, is limited.
+This is not enabled as the features it gives, at the moment, are limited.
 
 ## Release Notes
 

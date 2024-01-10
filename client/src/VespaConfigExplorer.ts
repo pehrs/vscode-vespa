@@ -8,6 +8,10 @@ import { VespaAppId } from './model/VespaAppId';
 import { VespaClusterList } from './model/VespaClusterList';
 import { VespaStatusResultsPanel } from './VespaStatusResultsPanel';
 import { VespaV2Metrics } from './model/VespaMetrics';
+import { AppContent } from './model/AppContent';
+import { text } from 'stream/consumers';
+
+const appContent: AppContent = new AppContent();
 
 export class VespaConfigExplorer {
 
@@ -21,6 +25,7 @@ export class VespaConfigExplorer {
 
 		this.registerSetDefaultCommand();
 		this.registerShowClusterStatusCommand(context);
+		this.registerOpenFile();
 
 		vscode.commands.registerCommand("vscode-vespa.refreshVespaConfig", args => {
 			if (args !== undefined) {
@@ -100,6 +105,52 @@ export class VespaConfigExplorer {
 					outputChannel.appendLine("setClusterAsDefault: " + clusterName);
 					vespaConfig.setDefault(clusterName);
 					this.vespaConfigProvider.refresh();
+				}
+			}
+		});
+	}
+
+
+
+	private registerOpenFile() {
+		vscode.commands.registerCommand("vscode-vespa.openSelectedFile", args => {
+			if (args !== undefined) {
+				const element = args as { key: string; data: { filename: string, cluster: string }; };
+
+				if (element.key === "file") {
+					const fileParts = element.data.filename.split("/");
+					const fn = element.data.filename.endsWith("/") ?
+						fileParts[fileParts.length - 2] :
+						fileParts[fileParts.length - 1];
+
+					const clusterName = element.data.cluster;
+					const configEndpoint = vespaConfig.getCluster(clusterName).configEndpoint;
+					appContent.fetchAppFile(configEndpoint, element.data.filename)
+						.then(textData => {
+							const fnPath = path.join(vscode.workspace.workspaceFolders[0].uri.path, fn);
+							const setting: vscode.Uri = vscode.Uri.parse(`untitled:${fnPath}`);
+							vscode.workspace.openTextDocument(setting).then((a: vscode.TextDocument) => {
+								vscode.window.showTextDocument(a, 1, false).then(e => {
+									e.edit(edit => {
+										edit.insert(new vscode.Position(0, 0), textData);										
+									});
+								});
+							}, (error: any) => {
+								showError(JSON.stringify(error));
+							});
+
+							// 
+							// FIXME: Open "new" file (Will not have a proper filename!!!)
+							// 
+							// const fnParts = element.data.filename.split(".");
+							// const language = fnParts[fnParts.length - 1];
+							// vscode.workspace.openTextDocument({
+							// 	content: textData,
+							// 	language: language
+							// }).then(newDocument => {
+							// 	vscode.window.showTextDocument(newDocument);
+							// });
+						});
 				}
 			}
 		});
@@ -185,7 +236,45 @@ export class VespaConfigProvider implements vscode.TreeDataProvider<{ key: strin
 				//{ key: `configEndpoint|${clusterName}`, data: clusterName, },
 				//{ key: `zipkinEndpoint|${clusterName}`, data: clusterName, },
 				{ key: `docTypes|${clusterName}`, data: clusterName, },
+				{ key: `appFiles`, data: clusterName, },
 			]);
+		}
+
+		if (element !== undefined && element.key === "appFiles") {
+			// 
+			const clusterName = element.data as string;
+			const configEndpoint = vespaConfig.getCluster(clusterName).configEndpoint;
+			return appContent.fetchAppDir(configEndpoint, "")
+				.then(files => {
+					return files.map(filename => {
+						return {
+							key: "file",
+							data: {
+								filename: filename,
+								cluster: clusterName,
+							}
+						};
+					});
+				});
+
+		}
+
+		if (element !== undefined && element.key === "file") {
+			const data = element.data as { filename: string, cluster: string };
+			const clusterName = data.cluster;
+			const configEndpoint = vespaConfig.getCluster(clusterName).configEndpoint;
+			return appContent.fetchAppDir(configEndpoint, data.filename)
+				.then(files => {
+					return files.map(filename => {
+						return {
+							key: "file",
+							data: {
+								filename: filename,
+								cluster: clusterName,
+							}
+						};
+					});
+				});
 		}
 
 		if (element !== undefined && element.key.startsWith("docTypes|")) {
@@ -367,6 +456,44 @@ export class VespaConfigProvider implements vscode.TreeDataProvider<{ key: strin
 				contextValue: "VESPA_CLUSTER",
 			};
 		}
+
+		if (element.key === "appFiles") {
+			const clusterName = element.data as string;
+
+			return {
+				label: `application-files`,
+				iconPath: new vscode.ThemeIcon('file-directory'),
+				// tooltip: new vscode.MarkdownString(`$(zap) Tooltip for ${element.key}`, true),
+				collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
+				contextValue: "VESPA_EXPLORER_APP_FILES",
+			};
+		}
+
+		if (element.key === "file") {
+			const data = element.data as { filename: string, cluster: string };
+
+			const fileParts = data.filename.split("/");
+			const fn = data.filename.endsWith("/") ?
+				fileParts[fileParts.length - 2] :
+				fileParts[fileParts.length - 1];
+
+
+			return {
+				label: fn,
+				iconPath: data.filename.endsWith("/") ?
+					new vscode.ThemeIcon('file-directory') :
+					new vscode.ThemeIcon('file'),
+				// tooltip: new vscode.MarkdownString(`$(zap) Tooltip for ${element.key}`, true),
+				collapsibleState: data.filename.endsWith("/") ?
+					vscode.TreeItemCollapsibleState.Collapsed :
+					vscode.TreeItemCollapsibleState.None,
+				contextValue: data.filename.endsWith("/") ?
+					"VESPA_EXPLORER_APP_DIR" :
+					"VESPA_EXPLORER_APP_FILE",
+			};
+		}
+
+
 		switch (element.key) {
 			case "vespa-config":
 				return {

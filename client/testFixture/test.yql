@@ -1,18 +1,18 @@
 {
-  "yql": "select * from msmarco where true limit 10",
-  "offset": 5,
-  "ranking": {
-    "matchPhase": {
-      "ascending": true,
-      "maxHits": 15
+    "yql": "select * from msmarco where true limit 10",
+    "offset": 5,
+    "ranking": {
+        "matchPhase": {
+            "ascending": true,
+            "maxHits": 15
+        }
+    },
+    "presentation" : {
+        "bolding": false,
+        "format": "json"
+    },
+    "trace": {
+      "level": 5,
+      "timestamps": true
     }
-  },
-  "presentation": {
-    "bolding": false,
-    "format": "json"
-  },
-  "trace": {
-    "level": 5,
-    "timestamps": true
-  }
 }

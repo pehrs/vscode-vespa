@@ -1,12 +1,12 @@
 {
 	"information_for_contributors": [
-		"This file has been converted from https://github.com/microsoft/vscode-JSON.tmLanguage/blob/master/JSON.tmLanguage",
-		"If you want to provide a fix or improvement, please create a pull request against the original repository.",
-		"Once accepted there, we are happy to receive an update request."
+		"This file is a copy of",
+		"https://github.com/microsoft/vscode/blob/main/extensions/json/syntaxes/JSON.tmLanguage.json",
+		"with some modifications for YQL support in the yql property"
 	],
-	"version": "https://github.com/microsoft/vscode-JSON.tmLanguage/commit/9bd83f1c252b375e957203f21793316203f61f70",
-	"name": "JSON (Javascript Next)",
-	"scopeName": "source.json",
+	"version": "1.0",
+	"name": "YQL Reqest",
+	"scopeName": "source.yql",
 	"patterns": [
 		{
 			"include": "#value"
@@ -184,6 +184,14 @@
 				{
 					"match": "\\\\.",
 					"name": "invalid.illegal.unrecognized-string-escape.json"
+				},
+				{
+					"match": "yql",
+					"name": "entity.name.function"
+				},
+				{
+					"match": "select|from|where|order\\ by|limit|offset|timeout",
+					"name": "keyword"
 				}
 			]
 		},

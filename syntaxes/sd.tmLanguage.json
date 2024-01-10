@@ -1,0 +1,143 @@
+{
+	"information_for_contributors": [
+		"Available tokens and modifiers:",
+		"https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide#predefined-textmate-scope-mappings"
+	],
+	"version": "1.0",
+	"name": "Vespa Schema (.sd) Coloring syntax",
+	"scopeName": "source.sd",
+	"patterns": [
+		{
+			"include": "#expression"
+		}
+	],
+	"repository": {
+		"expression": {
+			"patterns": [
+				{
+					"include": "#brackets"
+				},
+				{
+					"include": "#parenthesis"
+				},
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#rankProfileDeclaration"
+				},
+				{
+					"include": "#typeDeclaration"
+				},
+				{
+					"include": "#builtInFunctions"
+				},
+				{
+					"include": "#keywords"
+				},
+				{
+					"include": "#shortBuiltInFunctions"
+				}
+			]
+		},
+		"brackets": {
+			"match": "\\{|\\}",
+			"name": "variable.readonly"
+		},
+		"parenthesis": {
+			"match": "\\(|\\)",
+			"name": "variable.readonly"
+		},
+		"keywords": {
+			"match": "schema|document|function|fieldset|fields|field|indexing|attribute|inputs|index|document-summary|summary|match|expression|enable-bm25|first-phase|ignore-default-rank-features|rank-features|rank|inherits",
+			"name": "keyword.letter"
+		},
+		"shortBuiltInFunctions": {
+			"match": "bm25|sum|query",
+			"name": "entity.name.function.member"
+		},
+		"builtInFunctions": {
+			"match": "nativeRank|rankingExpression",
+			"name": "entity.name.function.member"
+		},
+		"typeDeclaration": {
+			"begin": "(?:(^[ \\t]*)|[ \\t]+)(?=type\\p{Print}*$)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.letter"
+				}
+			},
+			"end": "(?!\\G)",
+			"patterns": [
+				{
+					"name": "entity.name.type",
+					"begin": "type",
+					"beginCaptures": {
+						"0": {
+							"name": "keyword.letter"
+						}
+					},
+					"end": "{",
+					"endCaptures": {
+						"0": {
+							"name": "variable.readonly"
+						}
+					}
+				}
+			]
+		},
+		"rankProfileDeclaration": {
+			"begin": "(?=rank-profile.*$)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.letter"
+				}
+			},
+			"end": "(?!\\G)",
+			"patterns": [
+				{
+					"name": "entity.name.namespace",
+					"begin": "rank-profile",
+					"beginCaptures": {
+						"0": {
+							"name": "keyword.letter"
+						}
+					},
+					"patterns": [
+						{
+							"match": "inherits",
+							"name": "entity.name.function"
+						}
+					],
+					"end": "{",
+					"endCaptures": {
+						"0": {
+							"name": "variable.readonly"
+						}
+					}
+				}
+			]
+		},
+		"comment": {
+			"begin": "(?:(^[ \\t]*)|[ \\t]+)(?=#\\p{Print}*$)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.whitespace.comment.leading:sd"
+				}
+			},
+			"end": "(?!\\G)",
+			"patterns": [
+				{
+					"begin": "#",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment:sd"
+						}
+					},
+					"end": "\\n",
+					"name": "comment.line.number-sign:sd"
+				}
+			]
+		}
+	}
+}

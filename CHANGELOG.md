@@ -2,6 +2,16 @@
 
 All notable changes to the "vscode-vespa" extension will be documented in this file.
 
+## [1.1.1]
+
+- Vespa Explorer
+  - Browse cluster doc-types and fields
+  - Browse and download application content
+  - Removed the connection info
+- Simple Highlighting Syntax for Vespa schemas (*.sd)
+- WIP: Added some simple coloring for the "yql" property in the json highlight syntax
+
+
 ## [1.1.0]
 
 - Add button to save YQL result json as file.
