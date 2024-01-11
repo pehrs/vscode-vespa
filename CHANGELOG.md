@@ -2,6 +2,11 @@
 
 All notable changes to the "vscode-vespa" extension will be documented in this file.
 
+## [1.1.2]
+
+- Improvments on Vespa schema highlighting
+- Improvments on YQL request highlighting and query completion.
+
 ## [1.1.1]
 
 - Vespa Explorer

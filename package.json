@@ -2,7 +2,7 @@
   "name": "vscode-vespa",
   "displayName": "vscode-vespa",
   "description": "Vespa AI Extension",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "publisher": "pehrs-com",
   "license": "SEE LICENSE IN LICENSE",
   "icon": "media/vespa.png",
@@ -23,6 +23,7 @@
   "pricing": "Free",
   "activationEvents": [
     "onLanguage:yql",
+    "onLanguage:yqlReq",
     "onLanguage:sd"
   ],
   "main": "./client/out/extension",
@@ -76,19 +77,19 @@
     "keybindings": [
       {
         "command": "vscode-vespa.runQuery",
-        "when": "editorLangId == yql",
+        "when": "editorLangId == yqlReq",
         "key": "ctrl+enter",
         "mac": "cmd+enter"
       },
       {
         "command": "vscode-vespa.showClusterInfo",
-        "when": "editorLangId == yql",
+        "when": "editorLangId == yqlReq",
         "key": "ctrl+home",
         "mac": "cmd+home"
       },
       {
         "command": "vscode-vespa.selectConnection",
-        "when": "editorLangId == yql",
+        "when": "editorLangId == yqlReq",
         "key": "ctrl+end",
         "mac": "cmd+end"
       }
@@ -96,69 +97,69 @@
     "menus": {
       "editor/title": [
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.selectConnection",
           "group": "1_run"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.selectConnection",
           "group": "navigation"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.runQuery",
           "group": "1_run"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.runQuery",
           "group": "navigation"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.editVespaConfig",
           "group": "1_run"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.editVespaConfig",
           "group": "navigation"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.format",
           "group": "1_run"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.format",
           "group": "navigation"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.showClusterInfo",
           "group": "1_run"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.showClusterInfo",
           "group": "navigation"
         }
       ],
       "editor/context": [
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.runQuery",
           "group": "z_commands"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.selectConnection",
           "group": "z_commands"
         },
         {
-          "when": "resourceLangId == yql",
+          "when": "resourceLangId == yqlReq",
           "command": "vscode-vespa.showClusterInfo",
           "group": "z_commands"
         }
@@ -211,12 +212,18 @@
     },
     "languages": [
       {
-        "id": "yql",
+        "id": "yqlReq",
         "aliases": [
           "yql"
         ],
         "extensions": [
           ".yql"
+        ]
+      },
+      {
+        "id": "yql",
+        "aliases": [
+          "yql"
         ]
       },
       {
@@ -232,20 +239,25 @@
     ],
     "grammars": [
       {
-        "language": "yql",
-        "scopeName": "source.yql",
-        "path": "./syntaxes/yql.tmLanguage.json"
+        "language": "yqlReq",
+        "scopeName": "source.yqlReq",
+        "path": "./syntaxes/yqlReq.tmLanguage.json"
       },
       {
         "language": "sd",
         "scopeName": "source.sd",
         "path": "./syntaxes/sd.tmLanguage.json"
+      },
+      {
+        "language": "yql",
+        "scopeName": "source.yql",
+        "path": "./syntaxes/yql.tmLanguage.json"
       }
     ],
     "snippets": [
       {
-        "language": "yql",
-        "path": "./yql-snippets.json"
+        "language": "yqlReq",
+        "path": "./yql-req-snippets.json"
       }
     ]
   },

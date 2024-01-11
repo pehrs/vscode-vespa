@@ -102,7 +102,7 @@ function startYqlLanguageServer(context: ExtensionContext) {
 		// Register the server for plain text documents
 		documentSelector: [
 			// { scheme: 'file', language: 'plaintext' },
-			{ scheme: 'file', language: 'yql' }
+			{ scheme: 'file', language: 'yqlReq' }
 		],
 		synchronize: {
 			// Notify the server about file changes to '.clientrc files contained in the workspace
@@ -124,9 +124,93 @@ function startYqlLanguageServer(context: ExtensionContext) {
 	client.start();
 }
 
+const basicKeywords: string[] = [
+	"select",
+	"from",
+	"where",
+	"order by",
+	"limit",
+	"offset",
+	"timeout"
+];
+
+const whereKeywords: string[] = [
+	"nearestNeighbor",
+	"weightedSet",
+	"predicate",
+	"dotProduct",
+	"userQuery",
+	"nonEmpty",
+	"userInput",
+	"geoLocation",
+	"sameElement",
+	"matches",
+	"range",
+	"contains",
+	"weakAnd",
+	"phrase",
+	"fuzzy",
+	"equiv",
+	"onear",
+	"wand",
+	"true",
+	"false",
+	"rank",
+	"near",
+	"and",
+	"not",
+	"uri",
+	"or",
+];
+
+const annotationKeywords = [
+	"accentDrop",
+	"allowEmpty",
+	"andSegmenting",
+	"annotations",
+	"approximate",
+	"ascending",
+	"bounds",
+	"connectivity",
+	"descending",
+	"defaultIndex",
+	"distance",
+	"distanceThreshold",
+	"endAnchor",
+	"filter",
+	"function",
+	"grammar",
+	"hitLimit",
+	"hnsw.exploreAdditionalHits",
+	"id",
+	"implicitTransforms",
+	"label",
+	"language",
+	"locale",
+	"maxEditDistance",
+	"nfkc",
+	"normalizeCase",
+	"origin",
+	"prefix",
+	"substring",
+	"prefixLength",
+	"ranked",
+	"scoreThreshold",
+	"significance",
+	"startAnchor",
+	"stem",
+	"strength",
+	"suffix",
+	"targetHits",
+	"usePositionData",
+	"weight",
+];
+
+const yqlKeywords = basicKeywords.concat(whereKeywords);
+
 function registerCompletions(context: ExtensionContext) {
 	const fromCompletions = vscode.languages.registerCompletionItemProvider(
-		'yql',
+		'yqlReq',
 		{
 			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 
@@ -137,24 +221,42 @@ function registerCompletions(context: ExtensionContext) {
 					return undefined;
 				}
 				// get all text until the `position` and check if it reads `from `
-				// and if so then complete if `log`, `warn`, and `error`
+				// and if so then complete with available doc-types
 				const linePrefix = document.lineAt(position).text.slice(0, position.character);
 				// outputChannel.appendLine("linePrefix: " + linePrefix);
 				if (linePrefix.endsWith('from ')) {
 					const schemas: string[] = getAllVespaSchemaNames();
 					return schemas.map(schema =>
-						new vscode.CompletionItem(schema, vscode.CompletionItemKind.Method)
+						new vscode.CompletionItem(schema, vscode.CompletionItemKind.Constructor)
 					);
 				}
+				// Complete with available field names
 				if (linePrefix.endsWith('select ') || linePrefix.endsWith(', ')) {
 					const fields: string[] = getAllVespaSchemaFields();
 					fields.push("sddocname");
 					fields.push("documentid");
 					return fields.map(field =>
-						new vscode.CompletionItem(field, vscode.CompletionItemKind.Method)
+						new vscode.CompletionItem(field, vscode.CompletionItemKind.Field)
 					);
 				}
-				return undefined;
+
+				// Annotations
+				if (linePrefix.endsWith('{') && linePrefix.indexOf('select ') != -1) {
+					return annotationKeywords.map(field =>
+						new vscode.CompletionItem(field, vscode.CompletionItemKind.Field)
+					);
+				}
+
+				// if (linePrefix.endsWith('where ') || linePrefix.endsWith('and ') || linePrefix.endsWith('or ')) {
+				// 	return whereKeywords.map(field =>
+				// 		new vscode.CompletionItem(field, vscode.CompletionItemKind.Method)
+				// 	);
+				// }
+
+				// Default complete with all YQL keywords
+				return yqlKeywords.map(keyword =>
+					new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword)
+				);
 			}
 		},
 		' ' // triggered whenever a space ' ' is being typed
@@ -191,57 +293,6 @@ export function showError(msg: string) {
 function refreshServerConfig(): Promise<void> {
 	return vespaClusterInfo.refresh();
 }
-
-// async function org_getVespaServerConfig() {
-
-// 	if (vespaSchemaList !== undefined) {
-// 		return;
-// 	}
-// 	// const vespaYqlConfig = vscode.workspace.getConfiguration('vespaYql');
-// 	const configEndpoint: string = vespaConfig.configEndpoint();
-
-// 	const appIdUrl = `${configEndpoint}/config/v1/cloud.config.application-id`;
-
-// 	outputChannel.appendLine("Getting Vespa config from " + configEndpoint);
-
-// 	fetch(appIdUrl)
-// 		.then(appIdResult => {
-// 			appIdResult.json()
-// 				.then((appId: any) => {
-// 					// outputChannel.appendLine("appId: " + JSON.stringify(appId, null, 2));
-// 					const clusterListUrl = `${configEndpoint}/config/v2/tenant/${appId.tenant}/application/${appId.application}/cloud.config.cluster-list`;
-// 					// outputChannel.appendLine("Calling " + clusterListUrl);
-// 					fetch(clusterListUrl)
-// 						.then((clusterListResponse: any) => {
-// 							clusterListResponse.json()
-// 								.then((clusterList: any) => {
-// 									//outputChannel.appendLine("clusterList: " + JSON.stringify(clusterList, null, 2));
-// 									// Assume single cluster for now
-// 									vespaClusterName = clusterList.storage[0].name;
-// 									const schemaListUrl = `${configEndpoint}/config/v2/tenant/${appId.tenant}/application/${appId.application}/search.config.schema-info/${vespaClusterName}/search/cluster.${vespaClusterName}`;
-// 									// outputChannel.appendLine("Calling " + schemaListUrl);
-// 									fetch(schemaListUrl)
-// 										.then(schemaListResponse => {
-// 											schemaListResponse.json().then(list => {
-// 												vespaSchemaList = list;
-// 												//outputChannel.appendLine("schemaList: " + JSON.stringify(vespaSchemaList, null, 2));
-// 												outputChannel.appendLine("Got Vespa config!");
-// 											})
-// 												.catch(reason => showError(`Could not parse Vespa schema list from ${configEndpoint}, ${reason}`));
-// 										})
-// 										.catch(reason => showError(`Could not get Vespa schema list from ${configEndpoint}, ${reason}`));
-// 								})
-// 								.catch(reason => showError(`Could not parse Vespa cluster list from ${configEndpoint}, ${reason}`));
-// 						}).catch(reason => {
-// 							showError(`Could not get Vespa cluster list from ${configEndpoint}, ${reason}`);
-// 						});
-// 				})
-// 				.catch(reason => showError(`Could not parse Vespa AppId from ${configEndpoint}, ${reason}`));
-// 		})
-// 		.catch(reason => {
-// 			showError(`Could not get Vespa AppId from ${configEndpoint}, ${reason}`);
-// 		});
-// }
 
 
 function registerRunQueryCommand(context: ExtensionContext) {
@@ -296,7 +347,7 @@ function registerSelectConnection(context: ExtensionContext) {
 
 
 function registerYqlFormatter(context: ExtensionContext) {
-	vscode.languages.registerDocumentFormattingEditProvider('yql', {
+	vscode.languages.registerDocumentFormattingEditProvider('yqlReq', {
 		provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
 
 			formatYql();

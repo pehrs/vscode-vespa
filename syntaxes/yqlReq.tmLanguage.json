@@ -1,0 +1,123 @@
+{
+	"information_for_contributors": [
+		"This is a basic textmate syntax for yql requests",
+		"https://macromates.com/manual/en/language_grammars"
+	],
+	"version": "1.0",
+	"name": "YQL Reqest",
+	"scopeName": "source.yqlReq",
+	"patterns": [
+		{
+			"include": "#yqlStatement"
+		},
+		{
+			"include": "#stringProperty"
+		},
+		{
+			"include": "#constantProperty"
+		},
+		{
+			"include": "#objectProperty"
+		},
+		{
+			"match": "}",
+			"name": "keyword"
+		}
+	],
+	"repository": {
+		"yqlStatement": {
+			"begin": "\"(yql)\": \"",
+			"beginCaptures": {
+				"0": {
+					"name": "variable.readonly"
+				},
+				"1": {
+					"name": "markup.bold"
+				}
+			},
+			"end": "\"",
+			"endCaptures": {
+				"0": {
+					"name": "variable.readonly"
+				}
+			},
+			"name": "variable.readonly",
+			"patterns": [
+				{
+					"include": "source.yql"
+				}
+			]			
+		},
+		"stringProperty": {
+			"begin": "\"([^\"]+)\": \"([^\"]+)",
+			"beginCaptures": {
+				"0": {
+					"name": "variable.readonly"
+				},
+				"1": {
+					"name": "variable"
+				},
+				"2": {
+					"name": "string"
+				}
+			},
+			"end": "[\"\\\n]",
+			"endCaptures": {
+				"0": {
+					"name": "variable.readonly"
+				}
+			},
+			"name": "variable.readonly"			
+		},
+		"constantProperty": {
+			"begin": "\"([^\"]+)\": ([^,{]+)",
+			"beginCaptures": {
+				"0": {
+					"name": "variable.readonly"
+				},
+				"1": {
+					"name": "variable"
+				},
+				"2": {
+					"name": "string"
+				}
+			},
+			"end": "[,\\\n}]",
+			"endCaptures": {
+				"0": {
+					"name": "keyword"
+				}
+			},
+			"name": "variable.readonly"			
+		},
+		"objectProperty": {
+			"begin": "\"([^\"]+)\": {",
+			"beginCaptures": {
+				"0": {
+					"name": "variable.readonly"
+				},
+				"1": {
+					"name": "variable"
+				}
+			},
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "keyword"
+				}
+			},
+			"name": "variable.readonly",
+			"patterns"	: [
+				{
+					"include": "#stringProperty"
+				},
+				{
+					"include": "#constantProperty"
+				},
+				{
+					"include": "#objectProperty"
+				}
+			]
+		}	
+	}
+}

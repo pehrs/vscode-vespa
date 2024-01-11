@@ -12,7 +12,7 @@
 		"prefix": "full-yql-query",
 		"body": [
 			"{",
-			"    \"yql\": \"select * from msmarco where true limit 100\",",
+			"    \"yql\": \"select id, body, url from msmarco where body contains ({weight:200}'head') limit 10\",",
 			"    \"offset\": 5,",
 			"    \"ranking\": {",
 			"        \"matchPhase\": {",
