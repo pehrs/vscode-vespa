@@ -34,9 +34,9 @@ The [VS Code Vespa extension](https://github.com/pehrs/vscode-vespa) provides ri
 
 ## Requirements
 
-[Vespa cluster running](https://docs.vespa.ai/en/getting-started.html) with the config and query endpoints available.
+[Vespa cluster running](https://docs.vespa.ai/en/getting-started.html) with the config and query endpoints available (ports 19071, 19050 and 8080). You can use the scripts in [vespa-k8s-cluster](https://github.com/pehrs/vespa-k8s-cluster) to setup a vespa cluster locally using [kind](https://kind.sigs.k8s.io/).
 
-(Optional) Zipkin Server running
+(Optional) [Zipkin Server](https://zipkin.io/) running
 
 ### Zipkin
 
