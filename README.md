@@ -79,13 +79,13 @@ You can edit the config file directly in vscode by selecting the
 
 This is work in progress. 
 
-We have started working on this by copying the [vscode JSON syntax](https://github.com/microsoft/vscode/blob/main/extensions/json/syntaxes/JSON.tmLanguage.json) to a new [yql textmate syntax file](syntaxes/yql.tmLanguage.json) and added some simple coloring for the `yql` parameter.
+We have started working on a [yql request syntax file](syntaxes/yqlReq.tmLanguage.json) and added support for coloring of the `yql` parameter via the [yql syntax](syntaxes/yql.tmLanguage.json). These are based on the [vscode JSON syntax](https://github.com/microsoft/vscode/blob/main/extensions/json/syntaxes/JSON.tmLanguage.json) and [vscode SQL syntax](https://github.com/microsoft/vscode/blob/main/extensions/sql/syntaxes/sql.tmLanguage.json)
 
 ### Schema (.sd) Syntax
 
 This is work in progress. 
 
-We have started working on this in a new [yql textmate syntax file](syntaxes/sd.tmLanguage.json)
+We have started working on this in a new [Vespa Schema syntax](syntaxes/sd.tmLanguage.json).
 
 ### Zipkin traces
 The zipkin traces are work-in-progress as the Vespa trace format is quite hard to parse.
