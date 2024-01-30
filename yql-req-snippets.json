@@ -13,7 +13,7 @@
 		"body": [
 			"{",
 			"    \"yql\": \"select id, body, url from msmarco where body contains ({weight:200}'head') limit 10\",",
-			"    \"offset\": 5,",
+			"    \"offset\": 0,",
 			"    \"ranking\": {",
 			"        \"matchPhase\": {",
 			"            \"ascending\": true,",
@@ -31,15 +31,5 @@
 			"}"
 		],
 		"description": "Full YQL Sample including tracing"
-	},
-	"trace": {
-		"prefix": "yql trace",
-		"body": [
-			"\"trace\": {",
-			"  \"level\": 5,",
-			"  \"timestamps\": true",
-			"}"
-		],
-		"description": "Add YQL trace."
 	}
 }

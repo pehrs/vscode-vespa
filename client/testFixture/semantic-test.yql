@@ -1,0 +1,6 @@
+{
+    "hits": 3,
+    "yql": "select * from sources news where (nearestNeighbor(embedding, user_embedding))",
+    "ranking.features.query(user_embedding)": "embed(e5, \"neural search\")" ,
+    "ranking.profile": "recommendation"
+}

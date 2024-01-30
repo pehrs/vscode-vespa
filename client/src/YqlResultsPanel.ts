@@ -183,7 +183,9 @@ export class YqlResultsPanel {
 				if (column in child.fields) {
 					const value: string = child.fields[column];
 					if (value !== undefined && typeof value === 'string' && value.startsWith("http")) {
-						result += `<td><a href="${value}">${value}</a></td>`;
+						result += `<td><a href="${value}">${value}</a></td>`;					
+					} else if (value !== undefined && value['type'] !== undefined) {
+						result += `<td title="${JSON.stringify(value['values'])}">${value['type']}</td>`;
 					} else {
 						result += `<td>${value}</td>`;
 					}

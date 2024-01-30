@@ -1,18 +1,18 @@
 {
-    "yql": "select id, body, url from msmarco where body contains ({weight:200}'head') limit 10",
-    "offset": 5,
-    "ranking": {
-        "matchPhase": {
-            "ascending": true,
-            "maxHits": 15
-        }
-    },
-    "presentation" : {
-        "bolding": false,
-        "format": "json"
-    },
-    "trace": {
-      "level": 5,
-      "timestamps": true
+  "yql": "select id, body, url from msmarco where body contains ({weight:200}'head') limit 10",
+  "offset": 5,
+  "ranking": {
+    "matchPhase": {
+      "ascending": true,
+      "maxHits": 15
     }
+  },
+  "presentation": {
+    "bolding": false,
+    "format": "json"
+  }
+  "trace": {
+    "level": 5,
+    "timestamps": true
+  }
 }

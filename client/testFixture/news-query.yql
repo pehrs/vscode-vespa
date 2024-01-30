@@ -1,18 +1,22 @@
 {
-    "yql": "select * from news where true",
-    "offset": 5,
-    "ranking": {
-        "matchPhase": {
-            "ascending": true,
-            "maxHits": 15
-        }
-    },
-    "presentation" : {
-        "bolding": false,
-        "format": "json"
-    },
-    "trace": {
-      "level": 5,
-      "timestamps": true
+  "yql": "select user_id, embedding from user where true limit 3",
+  "queryProfile": "default",
+  "trace": {
+    "level": 0,
+    "explainLevel": 0,
+    "profileDepth": 0,
+    "timestamps": false,
+    "query": true,
+    "profiling": {
+      "matching": {
+        "depth": 0
+      },
+      "firstPhaseRanking": {
+        "depth": 0
+      },
+      "secondPhaseRanking": {
+        "depth": 0
+      }
     }
+  }
 }

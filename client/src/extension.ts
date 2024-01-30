@@ -208,6 +208,77 @@ const annotationKeywords = [
 
 const yqlKeywords = basicKeywords.concat(whereKeywords);
 
+const traceSample = {
+	"level": 0,
+	"explainLevel": 0,
+	"profileDepth": 0,
+	"timestamps": false,
+	"query": true,
+	"profiling": {
+		"matching": {
+			"depth": 0
+		},
+		"firstPhaseRanking": {
+			"depth": 0
+		},
+		"secondPhaseRanking": {
+			"depth": 0
+		}
+	}
+};
+
+const rulesSample = {
+	"off": true,
+	"rulebase": "",
+	"rules": 0
+};
+
+const rankingSample = {
+	"location": "",
+	"features": {
+		"featureName": ""
+	},
+	"listFeatures": false,
+	"profile": "default",
+	"properties": {
+		"propertyName": "value"
+	},
+	"softtimeout": {
+		"enable": true,
+		"factor": 0.7,
+	},
+	"sorting": "",
+	"freshness": "",
+	"queryCache": false,
+	"rerankCount": 0,
+	"keepRankCount": 0,
+	"rankScoreDropLimit": 0,
+	"globalPhase": {
+		"rerankCount": 0
+	}
+};
+
+const yqlReqTopLevelProperties = [
+	"\"yql\": \"select\"",
+	"\"hits\": 0",
+	"\"offset\": 0",
+	"\"queryProfile\": \"default\"",
+	"\"groupingSessionCache\": true",
+	"\"searchChain\": \"default\"",
+	"\"user\": \"\"",
+	"\"recall\": \"\"",
+	"\"hitcountestimate\": false",
+	"\"noCache\": false",
+	"\"timeout\": \"0.5s\"",
+	"\"weakAnd\": {\"replace\": false}",
+	"\"wand\": {\"wand\": 100}",
+	"\"sorting\": {\"degrading\": true}",
+	"\"metrics\": {\"ignore\": false}",
+	`"rules": ${JSON.stringify(rulesSample, null, 2)}`,
+	`"ranking": ${JSON.stringify(rankingSample, null, 2)}`,
+	`"trace": ${JSON.stringify(traceSample, null, 2)}`
+];
+
 function registerCompletions(context: ExtensionContext) {
 	const fromCompletions = vscode.languages.registerCompletionItemProvider(
 		'yqlReq',
@@ -220,6 +291,7 @@ function registerCompletions(context: ExtensionContext) {
 				if (vespaClusterInfo.clusterSchemas.size == 0) {
 					return undefined;
 				}
+
 				// get all text until the `position` and check if it reads `from `
 				// and if so then complete with available doc-types
 				const linePrefix = document.lineAt(position).text.slice(0, position.character);
@@ -244,6 +316,19 @@ function registerCompletions(context: ExtensionContext) {
 				if (linePrefix.endsWith('{') && linePrefix.indexOf('select ') != -1) {
 					return annotationKeywords.map(field =>
 						new vscode.CompletionItem(field, vscode.CompletionItemKind.Field)
+					);
+				}
+
+				const fileTextToCursor = document.getText(new vscode.Range(0, 0, position.line, position.character));
+				const leftMatch = fileTextToCursor.match(new RegExp("{", "g"));
+				const rightMatch = fileTextToCursor.match(new RegExp("}", "g"));
+				const leftCurls = leftMatch ? leftMatch.length : 0;
+				const rightCurls = rightMatch ? rightMatch.length : 0;
+				const curlDiff = leftCurls - rightCurls;
+				if (curlDiff == 1) {
+					// top level keywords
+					return yqlReqTopLevelProperties.map(schema =>
+						new vscode.CompletionItem(schema, vscode.CompletionItemKind.Constructor)
 					);
 				}
 
@@ -398,7 +483,7 @@ function formatYql() {
 
 function registerShowClusterInfo(context: ExtensionContext) {
 
-	const cmd = vscode.commands.registerCommand("vscode-vespa.showClusterInfo", args => {		
+	const cmd = vscode.commands.registerCommand("vscode-vespa.showClusterInfo", args => {
 		VespaStatusResultsPanel.showClusterStatus(context.extensionUri);
 	});
 	context.subscriptions.push(cmd);
