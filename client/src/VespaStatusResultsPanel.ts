@@ -4,6 +4,7 @@ import { VespaClusterConfig, vespaConfig } from './VespaConfig';
 import { fmtBytes, fmtNum, formatNumber, getNonce } from './utils';
 import { VespaDocInfo, VespaDocTypeInfo, VespaDocTypesInfo } from './model/VespaDocTypeInfo';
 import { VespaV2Metrics } from './model/VespaMetrics';
+import { fetchWithTimeout } from './vespaUtils';
 
 //
 // This panel has two modes one for a single index/doctype view and one for multiple index/doctype view
@@ -18,9 +19,14 @@ export class VespaStatusResultsPanel {
 
 	private clusterConfig: VespaClusterConfig;
 	private docInfo: VespaDocTypesInfo;
+	private status: string;
 	private timestamp: Date;
 
-	public static createOrShow(extensionUri: vscode.Uri, clusterConfig: VespaClusterConfig, docInfo: VespaDocTypesInfo, timestamp: Date) {
+	public static createOrShow(extensionUri: vscode.Uri,
+		clusterConfig: VespaClusterConfig,
+		docInfo: VespaDocTypesInfo,
+		status: string,
+		timestamp: Date) {
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
 			: undefined;
@@ -29,6 +35,7 @@ export class VespaStatusResultsPanel {
 		if (VespaStatusResultsPanel.currentPanel) {
 			VespaStatusResultsPanel.currentPanel.docInfo = docInfo;
 			VespaStatusResultsPanel.currentPanel.clusterConfig = clusterConfig;
+			VespaStatusResultsPanel.currentPanel.status = status;
 			VespaStatusResultsPanel.currentPanel.timestamp = timestamp;
 			VespaStatusResultsPanel.currentPanel._panel.reveal(column);
 			VespaStatusResultsPanel.currentPanel._update();
@@ -43,28 +50,47 @@ export class VespaStatusResultsPanel {
 			getYqlResultsWebviewOptions(extensionUri)
 		);
 
-		VespaStatusResultsPanel.currentPanel = new VespaStatusResultsPanel(panel, extensionUri, clusterConfig, docInfo, timestamp);
+		VespaStatusResultsPanel.currentPanel =
+			new VespaStatusResultsPanel(panel, extensionUri, clusterConfig, docInfo, status, timestamp);
 	}
 
 
 	static showClusterStatus(extensionUri: vscode.Uri) {
 
-		const cluster = vespaConfig.defaultCluster();
+		vespaConfig.fetchConfigId()
+		.then((_) => {
+			const cluster = vespaConfig.defaultCluster();
+			const timeoutMs = vespaConfig.httpTimeoutMs();
+	
+			const statusUrl = `${cluster.configEndpoint}/status`;
+	
+			fetchWithTimeout(statusUrl, timeoutMs)
+				.then(statusRes => statusRes.json()
+					.then(status =>
+						VespaV2Metrics.fetchDocInfo(cluster.configEndpoint)
+							.then(docInfo => {
+								// outputChannel.appendLine("docInfo: " + JSON.stringify(docInfo, jsonMapReplacer));				
+								VespaStatusResultsPanel.createOrShow(extensionUri, cluster, docInfo,
+									JSON.stringify(status, null, 2), new Date());
+							}).catch(error => {
+								showError("docCounts failed " + error + "\n" + error.stack);
+							})
+					));
+		});
 
-		VespaV2Metrics.fetchDocInfo(cluster.configEndpoint)
-			.then(docInfo => {
-				// outputChannel.appendLine("docInfo: " + JSON.stringify(docInfo, jsonMapReplacer));
-				VespaStatusResultsPanel.createOrShow(extensionUri, cluster, docInfo, new Date());
-			}).catch(error => {
-				showError("docCounts failed " + error + "\n" + error.stack);
-			});
 	}
 
 
-	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, clusterConfig: VespaClusterConfig, docInfo: VespaDocTypesInfo, timestamp: Date) {
+	private constructor(panel: vscode.WebviewPanel,
+		extensionUri: vscode.Uri,
+		clusterConfig: VespaClusterConfig,
+		docInfo: VespaDocTypesInfo,
+		status: string,
+		timestamp: Date) {
 		this._panel = panel;
 		this.clusterConfig = clusterConfig;
 		this.docInfo = docInfo;
+		this.status = status;
 		this.timestamp = timestamp;
 		this._extensionUri = extensionUri;
 
@@ -124,7 +150,11 @@ export class VespaStatusResultsPanel {
 
 		let result = `<div class="tab-frame">`;
 		result += `
-			<input type="radio" id="docCountTab" name="tabs" checked />
+			<input type="radio" id="status" name="tabs" checked />
+			<label for="status" checked="checked">Vespa Status</label>`;
+
+		result += `
+			<input type="radio" id="docCountTab" name="tabs" />
 			<label for="docCountTab" checked="checked">Vespa Cluster Documents</label>`;
 
 		if (this.clusterConfig) {
@@ -133,10 +163,17 @@ export class VespaStatusResultsPanel {
 			<label for="clusterStatusTab">Vespa Cluster Controller Status</label>`;
 		}
 
+		const url = new URL(this.clusterConfig.configEndpoint);
+
+
+		// Status
+		result += `<div class="tab">`;
+		result += `<pre>${this.status}</pre>`;
+		result += `</div>`;
+
 
 		result += `<div class="tab">`;
 		const docTypeNames: string[] = this.docInfo.getDocTypeNames();
-		if (docTypeNames.length > 0) {
 			// Mutliple indices
 			result += `<table>`;
 			result += `<tr><th>Vespa Cluster:</th><td>${this.clusterConfig.name}</td></tr>`;
@@ -145,7 +182,8 @@ export class VespaStatusResultsPanel {
 			result += `</table>`;
 			// result += `<tr><th>YQL:</th><td><pre>${JSON.stringify(this.docCounts, null, 2)}</pre></td></tr>`;
 
-			docTypeNames.map(docTypeName => {
+			if (docTypeNames.length > 0) {
+				docTypeNames.map(docTypeName => {
 
 				const docTypeData: VespaDocTypeInfo = this.docInfo.docTypes.get(docTypeName);
 
@@ -189,19 +227,17 @@ export class VespaStatusResultsPanel {
 			});
 
 			result += `</table>`;
+		} else {
+			result += `<h3>No Doc-types found!</h3>`;
 		}
 		result += `</div>`;
 
-		if (vespaConfig.configId) {
-			const url = new URL(this.clusterConfig.configEndpoint);
-			// FIXME: The port should be looked up from the Vesp cluster "model"
-			const clusterStateUrl = `${url.protocol}//${url.hostname}:19050/clustercontroller-status/v1/${vespaConfig.configId}`;
-
-			result += `<div class="tab">`;
-			result += `<button class="button"><a href="${clusterStateUrl}">Open in browser...</a></button>`;
-			result += `<div class="cluster-state"><iframe width="100%" height=1024px" src="${clusterStateUrl}" title="Vespa Cluster State"></iframe></div>`;
-			result += `</div>`;
-		}
+		const confId = vespaConfig.configId ? vespaConfig.configId : "";
+		const clusterStateUrl = `${url.protocol}//${url.hostname}:19050/clustercontroller-status/v1/${confId}`;
+		result += `<div class="tab">`;
+		result += `<button class="button"><a href="${clusterStateUrl}">Open in browser...</a></button>`;
+		result += `<div class="cluster-state"><iframe width="100%" height=1024px" src="${clusterStateUrl}" title="Vespa Cluster State"></iframe></div>`;
+		result += `</div>`;
 
 		// end
 		result += `</div>`;
@@ -234,7 +270,7 @@ export class VespaStatusResultsPanel {
 		// Enable the iframe to load the zipkin url
 
 		const url = new URL(this.clusterConfig.configEndpoint);
-		let cspUrl = `${url.protocol}//${url.hostname}:${url.port}`;
+		let cspUrl = `${url}`;
 		cspUrl = `${url.protocol}//${url.hostname}:19050 ${cspUrl}`; // FIXME: should be looked up from model
 		if (url.hostname === "localhost") {
 			cspUrl = `${url.protocol}//127.0.0.1:${url.port} ${cspUrl}`;

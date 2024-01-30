@@ -80,10 +80,10 @@ export class VespaConfig {
 
 	configId = undefined;
 
-	fetchConfigId() {
+	fetchConfigId():Promise<void> {
 		// http://localhost:19071/config/v2/tenant/default/application/default/cloud.config.cluster-list
 		const url = `${this.defaultCluster().configEndpoint}/config/v2/tenant/default/application/default/cloud.config.cluster-list`;
-		fetchWithTimeout(url, 2000)
+		return fetchWithTimeout(url, 2000)
 			.then(response => response.json())
 			.then((clusterListJson: any) => {
 				// Assume only one config for now...

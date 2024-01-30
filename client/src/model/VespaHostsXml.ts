@@ -21,7 +21,7 @@ export class VespaHostsXml {
 
 	static parse(data: any): VespaHostsXml {
 
-		if (data.hosts.host === undefined) {
+		if (data.hosts === undefined || data.hosts.host === undefined) {
 			return undefined;
 		}
 

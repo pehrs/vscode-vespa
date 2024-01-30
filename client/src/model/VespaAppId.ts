@@ -30,8 +30,14 @@ export class VespaAppId {
 
 		// outputChannel.appendLine("Getting Vespa config from " + configEndpoint);
 		return fetchWithTimeout(appIdUrl, timeoutMs)
-			.then(response => response.json()
-				.then((v:any) => new VespaAppId(v.tenant, v.application, v.instance)));
+			.then(
+				(response) => response.json()
+					.then((v: any) => new VespaAppId(v.tenant, v.application, v.instance)),
+				(reason) => {
+					console.log(reason);
+					return new VespaAppId(undefined, undefined, undefined);
+				}
+			);
 	}
 
 }

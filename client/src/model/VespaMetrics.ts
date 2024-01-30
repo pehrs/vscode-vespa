@@ -76,6 +76,9 @@ export class VespaV2Metrics {
 	}
 
 	getDistributionKey(servicesXml: VespaServicesXml, hostsXml: VespaHostsXml, hostname: string): string {
+		if (hostsXml === undefined) {
+			return "0";
+		}
 		const aliases: string[] = hostsXml.getAliasesForName(hostname);
 		const distributionKey = aliases.map(alias => servicesXml.getDistributionKeyForAlias(alias)).shift();
 		return distributionKey;
@@ -85,27 +88,26 @@ export class VespaV2Metrics {
 
 		const info = new VespaDocTypesInfo();
 
-		this.nodes.map(node => {
+		this.nodes.forEach(node => {
 			const hostname = node.hostname;
-			node.services.map(service => {
-				service.metrics.map(metric => {
-					const values = metric.values;
+			node.services.forEach(service => {
+				service.metrics.forEach(metric => {
+					const metricValues = metric.values;
 					const dimensions = metric.dimensions;
-					if (values && dimensions) {
-						// 
+					if (metricValues && dimensions) {
 						if (dimensions["documenttype"]) {
 							const docTypeName = dimensions["documenttype"];
-							if (values["content.proton.documentdb.documents.active.last"]) {
+							if (metricValues['content.proton.documentdb.documents.active.last'] >= 0) {
 								const docCount =
-									parseInt(values["content.proton.documentdb.documents.active.last"]);
+									parseInt(metricValues["content.proton.documentdb.documents.active.last"]);
 								const memUsageBytes =
-									parseInt(values["content.proton.documentdb.memory_usage.allocated_bytes.last"]);
+									parseInt(metricValues["content.proton.documentdb.memory_usage.allocated_bytes.last"]);
 								const diskUsageBytes =
-									parseInt(values["content.proton.documentdb.disk_usage.last"]);
+									parseInt(metricValues["content.proton.documentdb.disk_usage.last"]);
 								const tansactionLogUsageBytes =
-									parseInt(values["content.proton.transactionlog.disk_usage.last"]);
+									parseInt(metricValues["content.proton.transactionlog.disk_usage.last"]);
 								const matchRate =
-									parseFloat(values["content.proton.documentdb.matching.docs_matched.rate"]);
+									parseFloat(metricValues["content.proton.documentdb.matching.docs_matched.rate"]);
 
 								const docInfo = new VespaDocInfo(
 									hostname,
@@ -147,6 +149,9 @@ export class VespaV2Metrics {
 		});
 
 		const appId = await VespaAppId.fetchAppId(configEndpoint);
+		if (appId.application === undefined) {
+			return Promise.resolve(new VespaDocTypesInfo());
+		}
 		const status = await VespaStatus.fetchVespaStatus(configEndpoint);
 
 		const services_xml = await VespaServicesXml.fetchServiceXml(configEndpoint, status, appId);
@@ -157,7 +162,13 @@ export class VespaV2Metrics {
 		//outputChannel.appendLine("hosts_xml: " + JSON.stringify(hosts_xml));
 
 		return VespaV2Metrics.fetchMetrics(configEndpoint)
-			.then(v2Metrics => v2Metrics.getDocInfo(services_xml, hosts_xml));
+			.then(v2Metrics => {
+				if (v2Metrics === undefined) {
+					return new VespaDocTypesInfo();
+				} else {
+					return v2Metrics.getDocInfo(services_xml, hosts_xml);
+				}
+			});
 	}
 
 

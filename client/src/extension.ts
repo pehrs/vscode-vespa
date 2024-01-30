@@ -398,7 +398,7 @@ function formatYql() {
 
 function registerShowClusterInfo(context: ExtensionContext) {
 
-	const cmd = vscode.commands.registerCommand("vscode-vespa.showClusterInfo", args => {
+	const cmd = vscode.commands.registerCommand("vscode-vespa.showClusterInfo", args => {		
 		VespaStatusResultsPanel.showClusterStatus(context.extensionUri);
 	});
 	context.subscriptions.push(cmd);

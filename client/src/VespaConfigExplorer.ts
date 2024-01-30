@@ -10,6 +10,7 @@ import { VespaStatusResultsPanel } from './VespaStatusResultsPanel';
 import { VespaV2Metrics } from './model/VespaMetrics';
 import { AppContent } from './model/AppContent';
 import { text } from 'stream/consumers';
+import { fetchWithTimeout } from './vespaUtils';
 
 const appContent: AppContent = new AppContent();
 
@@ -72,104 +73,114 @@ export class VespaConfigExplorer {
 	static showClusterStatus(extensionUri: vscode.Uri, clusterName: string) {
 
 		// outputChannel.appendLine("clusterName: " + clusterName);
-
 		const cluster = vespaConfig.getCluster(clusterName);
-		VespaV2Metrics.fetchDocInfo(cluster.configEndpoint)
-			.then(docInfo => {
-				VespaStatusResultsPanel.createOrShow(extensionUri, cluster, docInfo, new Date());
-			}).catch(error => {
-				showError("docCounts failed " + error + "\n" + error.stack);
-			});
-	}
+		const timeoutMs = vespaConfig.httpTimeoutMs();
+		const statusUrl = `${cluster.configEndpoint}/status`;
+
+		fetchWithTimeout(statusUrl, timeoutMs)
+			.then(statusRes => {
+				statusRes.json().then(status =>
+					VespaV2Metrics.fetchDocInfo(cluster.configEndpoint)
+						.then(docInfo => {
+							VespaStatusResultsPanel.createOrShow(
+								extensionUri, cluster, docInfo, JSON.stringify(status, null, 2), new Date()
+							);
+						}).catch(error => {
+							showError("docCounts failed " + error + "\n" + error.stack);
+						})
+				);
+	});
+
+}
 
 	private registerShowClusterStatusCommand(context: vscode.ExtensionContext) {
-		vscode.commands.registerCommand("vscode-vespa.showSelectedClusterInfo", args => {
-			if (args !== undefined) {
-				const { key } = args;
-				if (key.startsWith("cluster:")) {
-					const clusterName = key.replace("cluster:", "");
-					VespaConfigExplorer.showClusterStatus(context.extensionUri, clusterName);
-				}
+	vscode.commands.registerCommand("vscode-vespa.showSelectedClusterInfo", args => {
+		if (args !== undefined) {
+			const { key } = args;
+			if (key.startsWith("cluster:")) {
+				const clusterName = key.replace("cluster:", "");
+				VespaConfigExplorer.showClusterStatus(context.extensionUri, clusterName);
 			}
-		});
-	}
+		}
+	});
+}
 
 
 	private registerSetDefaultCommand() {
-		vscode.commands.registerCommand("vscode-vespa.selectClusterAsDefault", args => {
-			if (args !== undefined) {
-				const { key } = args;
-				if (key.startsWith("cluster:")) {
-					const clusterName = key.replace("cluster:", "");
+	vscode.commands.registerCommand("vscode-vespa.selectClusterAsDefault", args => {
+		if (args !== undefined) {
+			const { key } = args;
+			if (key.startsWith("cluster:")) {
+				const clusterName = key.replace("cluster:", "");
 
-					outputChannel.appendLine("setClusterAsDefault: " + clusterName);
-					vespaConfig.setDefault(clusterName);
-					this.vespaConfigProvider.refresh();
-				}
+				outputChannel.appendLine("setClusterAsDefault: " + clusterName);
+				vespaConfig.setDefault(clusterName);
+				this.vespaConfigProvider.refresh();
 			}
-		});
-	}
+		}
+	});
+}
 
 
 
 	private registerOpenFile() {
-		vscode.commands.registerCommand("vscode-vespa.openSelectedFile", args => {
-			if (args !== undefined) {
-				const element = args as { key: string; data: { filename: string, cluster: string }; };
+	vscode.commands.registerCommand("vscode-vespa.openSelectedFile", args => {
+		if (args !== undefined) {
+			const element = args as { key: string; data: { filename: string, cluster: string }; };
 
-				if (element.key === "file") {
-					const fileParts = element.data.filename.split("/");
-					const fn = element.data.filename.endsWith("/") ?
-						fileParts[fileParts.length - 2] :
-						fileParts[fileParts.length - 1];
+			if (element.key === "file") {
+				const fileParts = element.data.filename.split("/");
+				const fn = element.data.filename.endsWith("/") ?
+					fileParts[fileParts.length - 2] :
+					fileParts[fileParts.length - 1];
 
-					const clusterName = element.data.cluster;
-					const configEndpoint = vespaConfig.getCluster(clusterName).configEndpoint;
-					appContent.fetchAppFile(configEndpoint, element.data.filename)
-						.then(textData => {
-							const fnPath = path.join(vscode.workspace.workspaceFolders[0].uri.path, fn);
-							const setting: vscode.Uri = vscode.Uri.parse(`untitled:${fnPath}`);
-							vscode.workspace.openTextDocument(setting).then((a: vscode.TextDocument) => {
-								vscode.window.showTextDocument(a, 1, false).then(e => {
-									e.edit(edit => {
-										edit.insert(new vscode.Position(0, 0), textData);										
-									});
+				const clusterName = element.data.cluster;
+				const configEndpoint = vespaConfig.getCluster(clusterName).configEndpoint;
+				appContent.fetchAppFile(configEndpoint, element.data.filename)
+					.then(textData => {
+						const fnPath = path.join(vscode.workspace.workspaceFolders[0].uri.path, fn);
+						const setting: vscode.Uri = vscode.Uri.parse(`untitled:${fnPath}`);
+						vscode.workspace.openTextDocument(setting).then((a: vscode.TextDocument) => {
+							vscode.window.showTextDocument(a, 1, false).then(e => {
+								e.edit(edit => {
+									edit.insert(new vscode.Position(0, 0), textData);
 								});
-							}, (error: any) => {
-								showError(JSON.stringify(error));
 							});
-
-							// 
-							// FIXME: Open "new" file (Will not have a proper filename!!!)
-							// 
-							// const fnParts = element.data.filename.split(".");
-							// const language = fnParts[fnParts.length - 1];
-							// vscode.workspace.openTextDocument({
-							// 	content: textData,
-							// 	language: language
-							// }).then(newDocument => {
-							// 	vscode.window.showTextDocument(newDocument);
-							// });
+						}, (error: any) => {
+							showError(JSON.stringify(error));
 						});
-				}
+
+						// 
+						// FIXME: Open "new" file (Will not have a proper filename!!!)
+						// 
+						// const fnParts = element.data.filename.split(".");
+						// const language = fnParts[fnParts.length - 1];
+						// vscode.workspace.openTextDocument({
+						// 	content: textData,
+						// 	language: language
+						// }).then(newDocument => {
+						// 	vscode.window.showTextDocument(newDocument);
+						// });
+					});
 			}
-		});
-	}
+		}
+	});
+}
 
 	private onActiveEditorChanged(): void {
 
-		if (vscode.window.activeTextEditor) {
-			if (vscode.window.activeTextEditor.document.uri.scheme === 'file') {
-				console.log("languageId: " + vscode.window.activeTextEditor.document.languageId);
-				const enabled = vscode.window.activeTextEditor.document.languageId === 'yql';
-				vscode.commands.executeCommand('setContext', 'yqlEnabled', enabled);
-				if (enabled) {
-					// this.vespaConfigProvider.refresh();
-				}
-			}
-		} else {
-			vscode.commands.executeCommand('setContext', 'yqlEnabled', false);
+	if(vscode.window.activeTextEditor) {
+	if (vscode.window.activeTextEditor.document.uri.scheme === 'file') {
+		console.log("languageId: " + vscode.window.activeTextEditor.document.languageId);
+		const enabled = vscode.window.activeTextEditor.document.languageId === 'yql';
+		vscode.commands.executeCommand('setContext', 'yqlEnabled', enabled);
+		if (enabled) {
+			// this.vespaConfigProvider.refresh();
 		}
+	}
+} else {
+	vscode.commands.executeCommand('setContext', 'yqlEnabled', false);
+}
 	}
 }
 
