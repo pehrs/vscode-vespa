@@ -1,0 +1,18 @@
+{
+    "yql": "select * from news where true",
+    "offset": 5,
+    "ranking": {
+        "matchPhase": {
+            "ascending": true,
+            "maxHits": 15
+        }
+    },
+    "presentation" : {
+        "bolding": false,
+        "format": "json"
+    },
+    "trace": {
+      "level": 5,
+      "timestamps": true
+    }
+}

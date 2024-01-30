@@ -533,7 +533,7 @@ async function runYqlQuery(context: ExtensionContext, yql: string): Promise<void
 			response.json()
 				.then((data: any) => {
 					outputChannel.appendLine("Got Vespa query response!");
-					if (data.trace) {
+					if (data.trace && vespaConfig.zipkinEndpoint !== undefined && vespaConfig.zipkinEndpoint.length > 0) {
 						uploadTrace2Zipkin(data)
 							.then((zipkinLink: string) => {
 								YqlResultsPanel.createOrShow(context.extensionUri, yql, data, zipkinLink, queryTimestamp);
@@ -545,7 +545,7 @@ async function runYqlQuery(context: ExtensionContext, yql: string): Promise<void
 						YqlResultsPanel.createOrShow(context.extensionUri, yql, data, undefined, queryTimestamp);
 					}
 				}).catch(reason => {
-					showError(`Could not parse response from ${queryEndpoint}, ${reason}`);
+					showError(`runYqlQuery(): Could not parse response from ${queryEndpoint}, ${reason}`);
 				});
 		})
 		.catch(reason => {

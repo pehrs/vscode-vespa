@@ -2,6 +2,11 @@
 
 All notable changes to the "vscode-vespa" extension will be documented in this file.
 
+## [1.1.4]
+
+- Make sure you can run query if zipkin is NOT defined.
+- Fix bug with number type columns.
+
 ## [1.1.3]
 
 - Fix issues with connecting to single node cluster at Vespa cluster startup and deployment.
