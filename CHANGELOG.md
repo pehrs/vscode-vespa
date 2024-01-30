@@ -2,6 +2,10 @@
 
 All notable changes to the "vscode-vespa" extension will be documented in this file.
 
+## [1.1.3]
+
+- Fix issues with connecting to single node cluster at Vespa cluster startup and deployment.
+
 ## [1.1.2]
 
 - Improvments on Vespa schema highlighting
