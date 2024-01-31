@@ -3,6 +3,9 @@ import * as fs from 'fs';
 import { defaultResult, outputChannel } from './extension';
 import { vespaConfig } from './VespaConfig';
 import { getNonce } from './utils';
+import hljs from 'highlight.js';
+import { jsonLang } from './jsonLang';
+hljs.registerLanguage('json', jsonLang);
 
 export class YqlResultsPanel {
 
@@ -54,7 +57,7 @@ export class YqlResultsPanel {
 		YqlResultsPanel.currentPanel = new YqlResultsPanel(panel, extensionUri, "", defaultResult, undefined, undefined);
 	}
 
-	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, yql: string, data: any, zipkinLink: string, queryTimestamp:string) {
+	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, yql: string, data: any, zipkinLink: string, queryTimestamp: string) {
 		this._panel = panel;
 		this.yql = yql;
 		this.data = data;
@@ -183,7 +186,7 @@ export class YqlResultsPanel {
 				if (column in child.fields) {
 					const value: string = child.fields[column];
 					if (value !== undefined && typeof value === 'string' && value.startsWith("http")) {
-						result += `<td><a href="${value}">${value}</a></td>`;					
+						result += `<td><a href="${value}">${value}</a></td>`;
 					} else if (value !== undefined && value['type'] !== undefined) {
 						result += `<td title="${JSON.stringify(value['values'])}">${value['type']}</td>`;
 					} else {
@@ -234,10 +237,14 @@ export class YqlResultsPanel {
 		result += `<table>`;
 		result += `<tr><th>Vespa Cluster:</th><td>${vespaConfig.default()}</td></tr>`;
 		result += `<tr><th>Query Endpoint:</th><td>${vespaConfig.queryEndpoint()}</td></tr>`;
-		if(this.queryTimestamp) {
+		if (this.queryTimestamp) {
 			result += `<tr><th>Query Timestamp:</th><td>${this.queryTimestamp}</td></tr>`;
 		}
-		result += `<tr><th>YQL:</th><td><pre>${this.yql}</pre></td></tr>`;		
+		const highlightedYqlRequest = hljs.highlight(
+			this.yql,
+			{ language: 'json' }
+		).value;
+		result += `<tr><th>YQL:</th><td><pre>${highlightedYqlRequest}</pre></td></tr>`;
 		result += `</table>`;
 		result += `</div>`;
 
@@ -247,9 +254,13 @@ export class YqlResultsPanel {
 		}
 
 		// JSON
+		const highlightedCode = hljs.highlight(
+			JSON.stringify(this.data, null, 2),
+			{ language: 'json' }
+		).value;
 		result += `<div class="tab"><p>`;
 		result += `<button class="button" id="save_json_btn">Save JSON</button>`;
-		result += `<div><pre>${JSON.stringify(this.data, null, 2)}</pre></div>`;
+		result += `<div><pre>${highlightedCode}</pre></div>`;
 		result += `</p></div>`;
 
 
@@ -311,7 +322,7 @@ export class YqlResultsPanel {
 					and only allow scripts that have a specific nonce.
 				-->
 				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; 
-				style-src ${cspUrl} ${webview.cspSource}; 
+				style-src ${cspUrl} ${webview.cspSource} https://cdnjs.cloudflare.com; 
 				frame-src ${cspUrl};
 				img-src   ${cspUrl} ${webview.cspSource} https:; 
 				script-src ${cspUrl} 'nonce-${nonce}';">
@@ -322,6 +333,7 @@ export class YqlResultsPanel {
 				<link href="${stylesMainUri}" rel="stylesheet"/>
 				<link href="${stylesTableUri}" rel="stylesheet"/>
 				<link href="${stylesTabsUri}" rel="stylesheet"/>
+				<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet"/>
 
 				<title>YQL Results</title>
 			</head>

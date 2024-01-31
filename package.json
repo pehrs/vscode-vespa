@@ -2,7 +2,7 @@
   "name": "vscode-vespa",
   "displayName": "vscode-vespa",
   "description": "Vespa AI Extension",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "publisher": "pehrs-com",
   "license": "SEE LICENSE IN LICENSE",
   "icon": "media/vespa.png",
@@ -235,7 +235,6 @@
           ".sd"
         ]
       }
-
     ],
     "grammars": [
       {
@@ -284,6 +283,7 @@
   },
   "dependencies": {
     "fast-xml-parser": "^4.3.2",
+    "highlight.js": "^11.9.0",
     "node-fetch": "^3.3.2",
     "source-map-support": "^0.5.21"
   }

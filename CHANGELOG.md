@@ -2,6 +2,10 @@
 
 All notable changes to the "vscode-vespa" extension will be documented in this file.
 
+## [1.1.5]
+
+- Color code json with highlight.js
+
 ## [1.1.4]
 
 - Make sure you can run query if zipkin is NOT defined.

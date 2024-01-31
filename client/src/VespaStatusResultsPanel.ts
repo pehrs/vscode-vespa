@@ -5,6 +5,9 @@ import { fmtBytes, fmtNum, formatNumber, getNonce } from './utils';
 import { VespaDocInfo, VespaDocTypeInfo, VespaDocTypesInfo } from './model/VespaDocTypeInfo';
 import { VespaV2Metrics } from './model/VespaMetrics';
 import { fetchWithTimeout } from './vespaUtils';
+import hljs from 'highlight.js';
+import { jsonLang } from './jsonLang';
+hljs.registerLanguage('json', jsonLang);
 
 //
 // This panel has two modes one for a single index/doctype view and one for multiple index/doctype view
@@ -167,8 +170,12 @@ export class VespaStatusResultsPanel {
 
 
 		// Status
+		const highlightedStatus = hljs.highlight(
+			this.status,
+			{ language: 'json' }
+		).value;
 		result += `<div class="tab">`;
-		result += `<pre>${this.status}</pre>`;
+		result += `<pre>${highlightedStatus}</pre>`;
 		result += `</div>`;
 
 
@@ -288,7 +295,7 @@ export class VespaStatusResultsPanel {
 					and only allow scripts that have a specific nonce.
 				-->
 				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; 
-				style-src ${cspUrl} ${webview.cspSource}; 
+				style-src ${cspUrl} ${webview.cspSource} https://cdnjs.cloudflare.com; 
 				frame-src ${cspUrl};
 				img-src   ${cspUrl} ${webview.cspSource} https:; 
 				script-src ${cspUrl} 'nonce-${nonce}';">
@@ -299,6 +306,7 @@ export class VespaStatusResultsPanel {
 				<link href="${stylesMainUri}" rel="stylesheet"/>
 				<link href="${stylesTableUri}" rel="stylesheet"/>
 				<link href="${stylesTabsUri}" rel="stylesheet"/>
+				<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet"/>
 
 				<title>Vespa cluster document counts</title>
 			</head>

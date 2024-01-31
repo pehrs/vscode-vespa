@@ -1,7 +1,7 @@
 {
 	"name": "vscode-vespa-server",
 	"description": "Example implementation of a language server in node.",
-	"version": "1.1.4",
+	"version": "1.1.5",
 	"author": "Matti Pehrs",
 	"license": "MIT",
 	"engines": {
