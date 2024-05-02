@@ -49,7 +49,7 @@
 			"name": "variable.readonly"
 		},
 		"keywords": {
-			"match": "schema|document|function|fieldset|fields|field|indexing|attribute|inputs|index|document-summary|summary|match|expression|enable-bm25|first-phase|ignore-default-rank-features|rank-features|rank|inherits",
+			"match": "schema|document|function|fieldset|fields|field|indexing|attribute|inputs|index|document-summary|summary|match|expression|enable-bm25|first-phase|second-phase|global-phase|ignore-default-rank-features|rank-features|rank|inherits",
 			"name": "keyword.letter"
 		},
 		"shortBuiltInFunctions": {
