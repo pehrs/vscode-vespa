@@ -40,7 +40,7 @@ The [VS Code Vespa extension](https://github.com/pehrs/vscode-vespa) provides ri
 
 See the sections below for details on how to run vespa and zipkin for development.
 
-### Run Vespa cluster with Docker
+### Run Vespa cluster and deploy sample app with Docker Compose
 
 ```shell
 
@@ -48,19 +48,11 @@ cd vespa-sample-app
 
 ./vespa-cluster-start.sh
 
+# Deploy the sample app
 ./deploy-app.sh
 
 # Wait until vespa is up and running, then
 ./books-insert.sh
-```
-
-### Sample vespa app
-
-A simple vespa app is in the `vespa-sample-app` dir:
-```shell
-
-./vespa-cluster-start.sh
-
 ```
 
 ### Zipkin
