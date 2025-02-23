@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hosts>
+  <host name="vespa-config-0.vespanet">
+    <alias>config0</alias>
+  </host>
+  <host name="vespa-config-1.vespanet">
+    <alias>config1</alias>
+  </host>
+  <host name="vespa-config-2.vespanet">
+    <alias>config2</alias>
+  </host>
+  <host name="vespa-query-0.vespanet">
+    <alias>query0</alias>
+  </host>
+  <host name="vespa-feed-0.vespanet">
+    <alias>feed0</alias>
+  </host>
+  <host name="vespa-content-0.vespanet">
+    <alias>content0</alias>
+  </host>
+  <host name="vespa-content-1.vespanet">
+    <alias>content1</alias>
+  </host>
+  <host name="vespa-content-2.vespanet">
+    <alias>content2</alias>
+  </host>
+  <host name="vespa-content-3.vespanet">
+    <alias>content3</alias>
+  </host>
+</hosts>

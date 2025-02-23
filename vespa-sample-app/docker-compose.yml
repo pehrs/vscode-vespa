@@ -1,0 +1,236 @@
+version: '3'
+services:
+  vespa-config-0: # This is also the hostname of the container within the Docker network (i.e. https://vespa-config-1/)
+    hostname: vespa-config-0.vespanet
+    image: vespaengine/vespa:8
+    #command: configserver,services
+    command: ""
+    container_name: vespa-config-0
+    environment:
+      - VESPA_CONFIGSERVERS=vespa-config-0.vespanet,vespa-config-1.vespanet,vespa-config-2.vespanet
+      #- VESPA_TLS_CONFIG_FILE=/var/tls/tls.json
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes:
+      - vespa-config-0-data:/opt/vespa/var
+      #- ./tls:/var/tls/
+      - ./logs:/opt/vespa/logs/vespa/
+    ports:
+      - 19071:19071 # Config port
+      - 19050:19050 # Status page port
+      - 2181:2181 # Zookeeper
+    expose:
+      - "19071"
+      - "19050"
+      - "2181"
+      - "19100"
+      - "19092"
+    networks:
+      - vespa # All of the containers will join the same Docker bridge network
+  vespa-config-1:
+    hostname: vespa-config-1.vespanet
+    image: vespaengine/vespa:8
+    #command: configserver,services
+    command: ""
+    container_name: vespa-config-1
+    environment:
+      - VESPA_CONFIGSERVERS=vespa-config-0.vespanet,vespa-config-1.vespanet,vespa-config-2.vespanet
+      #- VESPA_TLS_CONFIG_FILE=/var/tls/tls.json
+    expose:
+      - "19071"
+      - "19050"
+      - "2181"
+      - "19100"
+      - "19092"
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes:
+      - vespa-config-1-data:/opt/vespa/var
+      #- ./tls:/var/tls/
+    networks:
+      - vespa # All of the containers will join the same Docker bridge network
+  vespa-config-2:
+    hostname: vespa-config-2.vespanet
+    image: vespaengine/vespa:8
+    #command: configserver,services
+    command: ""
+    container_name: vespa-config-2
+    environment:
+      - VESPA_CONFIGSERVERS=vespa-config-0.vespanet,vespa-config-1.vespanet,vespa-config-2.vespanet
+      #- VESPA_TLS_CONFIG_FILE=/var/tls/tls.json
+    expose:
+      - "19071"
+      - "19050"
+      - "2181"
+      - "19100"
+      - "19092"
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes:
+      - vespa-config-2-data:/opt/vespa/var
+      #- ./tls:/var/tls/
+    networks:
+      - vespa # All of the containers will join the same Docker bridge network
+  vespa-query-0:
+    hostname: vespa-query-0.vespanet
+    image: vespaengine/vespa:8
+    command: services
+    container_name: vespa-query-0
+    environment:
+      - VESPA_CONFIGSERVERS=vespa-config-0.vespanet,vespa-config-1.vespanet,vespa-config-2.vespanet
+      #- VESPA_TLS_CONFIG_FILE=/var/tls/tls.json
+    ports:
+      - 8080:8080 # Query port
+      #- 8443:8443 # Query port
+    expose:
+      - "8080"
+      #- "8443"
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes:
+      - vespa-query-0-data:/opt/vespa/var
+      #- ./tls:/var/tls/
+    networks:
+      - vespa # All of the containers will join the same Docker bridge network
+  vespa-feed-0:
+    hostname: vespa-feed-0.vespanet
+    image: vespaengine/vespa:8
+    command: services
+    container_name: vespa-feed-0
+    environment:
+      - VESPA_CONFIGSERVERS=vespa-config-0.vespanet,vespa-config-1.vespanet,vespa-config-2.vespanet
+      #- VESPA_TLS_CONFIG_FILE=/var/tls/tls.json
+    ports:
+      - 9080:8080 # Feed port
+      #- 9443:8443 # Feed port
+    expose:
+      - "9080"
+      #- "9443"
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes:
+      - vespa-feed-0-data:/opt/vespa/var
+      #- ./tls:/var/tls/
+    networks:
+      - vespa # All of the containers will join the same Docker bridge network
+  vespa-content-0:
+    hostname: vespa-content-0.vespanet
+    image: vespaengine/vespa:8
+    command: services
+    container_name: vespa-content-0
+    environment:
+      - VESPA_CONFIGSERVERS=vespa-config-0.vespanet,vespa-config-1.vespanet,vespa-config-2.vespanet
+      #- VESPA_TLS_CONFIG_FILE=/var/tls/tls.json
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes:
+      - vespa-content-0-data:/opt/vespa/var
+      #- ./tls:/var/tls/
+    networks:
+      - vespa # All of the containers will join the same Docker bridge network
+  vespa-content-1:
+    hostname: vespa-content-1.vespanet
+    image: vespaengine/vespa:8
+    command: services
+    container_name: vespa-content-1
+    environment:
+      - VESPA_CONFIGSERVERS=vespa-config-0.vespanet,vespa-config-1.vespanet,vespa-config-2.vespanet
+      #- VESPA_TLS_CONFIG_FILE=/var/tls/tls.json
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes:
+      - vespa-content-1-data:/opt/vespa/var
+      #- ./tls:/var/tls/
+    networks:
+      - vespa # All of the containers will join the same Docker bridge network
+  vespa-content-2:
+    hostname: vespa-content-2.vespanet
+    image: vespaengine/vespa:8
+    command: services
+    container_name: vespa-content-2
+    environment:
+      - VESPA_CONFIGSERVERS=vespa-config-0.vespanet,vespa-config-1.vespanet,vespa-config-2.vespanet
+      #- VESPA_TLS_CONFIG_FILE=/var/tls/tls.json
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes:
+      - vespa-content-2-data:/opt/vespa/var
+      #- ./tls:/var/tls/
+    networks:
+      - vespa # All of the containers will join the same Docker bridge network
+  vespa-content-3:
+    hostname: vespa-content-3.vespanet
+    image: vespaengine/vespa:8
+    command: services
+    container_name: vespa-content-3
+    environment:
+      - VESPA_CONFIGSERVERS=vespa-config-0.vespanet,vespa-config-1.vespanet,vespa-config-2.vespanet
+      #- VESPA_TLS_CONFIG_FILE=/var/tls/tls.json
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes:
+      - vespa-content-3-data:/opt/vespa/var
+      #- ./tls:/var/tls/
+    networks:
+      - vespa # All of the containers will join the same Docker bridge network
+      
+
+volumes:
+  vespa-config-0-data:
+  vespa-config-1-data:
+  vespa-config-2-data:
+  vespa-query-0-data:
+  vespa-feed-0-data:
+  vespa-content-0-data:
+  vespa-content-1-data:
+  vespa-content-2-data:
+  vespa-content-3-data:
+
+networks:
+  vespa:
+    name: vespanet

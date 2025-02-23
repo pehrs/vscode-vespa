@@ -6,3 +6,5 @@ node_modules
 client/server
 .vscode-test
 .metals
+
+vespa-k8s-cluster

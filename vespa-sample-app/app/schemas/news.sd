@@ -1,0 +1,44 @@
+schema news {
+    document news {
+        field news_id type string {
+            indexing: summary | attribute
+            attribute: fast-search
+        }
+        field url type string {
+            indexing: index | summary
+        }
+        field ts type long {
+            indexing: summary | attribute
+        }
+        field segment_index type int {
+            indexing: summary | attribute
+        }
+        field title type string {
+            indexing: index | summary
+            index: enable-bm25
+        }
+        field content type string {
+            indexing: index | summary
+            index: enable-bm25
+        }
+        field embedding type tensor<float>(d0[384]) {
+            indexing: attribute | index | summary
+            attribute {
+                distance-metric: dotproduct
+            }
+        }
+    }
+
+    fieldset default {
+        fields: title, url, content
+    }
+
+    rank-profile recommendation inherits default {
+        inputs {
+          query(q_embedding) tensor<float>(d0[384])
+        }
+        first-phase {
+          expression: attribute(ts) * closeness(field, embedding)
+        }
+    }
+}

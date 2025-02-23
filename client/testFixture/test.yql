@@ -1,18 +1,10 @@
 {
-  "yql": "select id, body, url from msmarco where body contains ({weight:200}'head') limit 10",
-  "offset": 5,
-  "ranking": {
-    "matchPhase": {
-      "ascending": true,
-      "maxHits": 15
-    }
-  },
-  "presentation": {
-    "bolding": false,
-    "format": "json"
-  }
+  "yql": "select documentid, content from books where content contains ({weight:200}'head') limit 100",
   "trace": {
     "level": 5,
-    "timestamps": true
+    "explainLevel": 5,
+    "profileDepth": 10,
+    "timestamps": true,
+    "query": true
   }
 }

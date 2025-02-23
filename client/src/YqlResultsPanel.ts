@@ -214,17 +214,17 @@ export class YqlResultsPanel {
 
 		result += `
 		<input type="radio" id="yqlRequestTab" name="tabs" checked />
-		<label for="yqlRequestTab" checked="checked">Vespa YQL Request</label>`;
+		<label for="yqlRequestTab" checked="checked">YQL Request</label>`;
 
 		if (childCount > 0) {
 			result += `
 			<input type="radio" id="yqlTab" name="tabs" checked />
-			<label for="yqlTab" checked="checked">Vespa YQL Results</label>`;
+			<label for="yqlTab" checked="checked">YQL Results</label>`;
 		}
 
 		result += `
 		<input type="radio" id="jsonTab" name="tabs" />
-		<label for="jsonTab">Vespa JSON Response</label>
+		<label for="jsonTab">Response Details</label>
 		`;
 
 		if (this.zipkinLink !== undefined) {

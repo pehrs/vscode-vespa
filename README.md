@@ -34,9 +34,34 @@ The [VS Code Vespa extension](https://github.com/pehrs/vscode-vespa) provides ri
 
 ## Requirements
 
-[Vespa cluster running](https://docs.vespa.ai/en/getting-started.html) with the config and query endpoints available (ports 19071, 19050 and 8080). You can use the scripts in [vespa-k8s-cluster](https://github.com/pehrs/vespa-k8s-cluster) to setup a vespa cluster locally using [kind](https://kind.sigs.k8s.io/).
+[Vespa cluster running](https://docs.vespa.ai/en/getting-started.html) with the config and query endpoints available (ports 19071, 19050 and 8080).
 
 (Optional) [Zipkin Server](https://zipkin.io/) running
+
+See the sections below for details on how to run vespa and zipkin for development.
+
+### Run Vespa cluster with Docker
+
+```shell
+
+cd vespa-sample-app
+
+./vespa-cluster-start.sh
+
+./deploy-app.sh
+
+# Wait until vespa is up and running, then
+./books-insert.sh
+```
+
+### Sample vespa app
+
+A simple vespa app is in the `vespa-sample-app` dir:
+```shell
+
+./vespa-cluster-start.sh
+
+```
 
 ### Zipkin
 
@@ -63,6 +88,7 @@ If the config file is not present then `vscode-vespa` will create a default conf
 			"name": "localhost",
 			"queryEndpoint": "http://localhost:8080/search",
 			"configEndpoint": "http://localhost:19071",
+			"controllerEndpoint": "http://localhost:19050",
 			"zipkinEndpoint": "http://localhost:9411",
 		}
 	],

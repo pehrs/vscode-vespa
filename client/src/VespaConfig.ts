@@ -8,6 +8,7 @@ export interface VespaClusterConfig {
 	name: string,
 	queryEndpoint: string;
 	configEndpoint: string;
+	controllerEndpoint?: string;
 	zipkinEndpoint?: string;
 }
 
@@ -24,6 +25,7 @@ const defaultConfig: VespaRootConfig = {
 			name: "localhost",
 			queryEndpoint: "http://localhost:8080/search",
 			configEndpoint: "http://localhost:19071",
+			controllerEndpoint: "http://localhost:19050",
 			zipkinEndpoint: "http://localhost:9411",
 		}
 	],
@@ -76,6 +78,17 @@ export class VespaConfig {
 
 	configFilePath(): string {
 		return `${configDir}/vespa-config.json`;
+	}
+
+	clusterStateUrl(confId: string): string {
+		const defaultCluster = this.defaultCluster();
+		if(defaultCluster.controllerEndpoint) {
+			return `${defaultCluster.controllerEndpoint}/clustercontroller-status/v1/${confId}`
+		}
+		// Fallback 
+		const url = new URL(this.configEndpoint());
+		const clusterStateUrl = `${url.protocol}//${url.hostname}:19050/clustercontroller-status/v1/${confId}`;
+		return clusterStateUrl;
 	}
 
 	configId = undefined;

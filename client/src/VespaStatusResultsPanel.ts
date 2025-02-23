@@ -61,25 +61,25 @@ export class VespaStatusResultsPanel {
 	static showClusterStatus(extensionUri: vscode.Uri) {
 
 		vespaConfig.fetchConfigId()
-		.then((_) => {
-			const cluster = vespaConfig.defaultCluster();
-			const timeoutMs = vespaConfig.httpTimeoutMs();
-	
-			const statusUrl = `${cluster.configEndpoint}/status`;
-	
-			fetchWithTimeout(statusUrl, timeoutMs)
-				.then(statusRes => statusRes.json()
-					.then(status =>
-						VespaV2Metrics.fetchDocInfo(cluster.configEndpoint)
-							.then(docInfo => {
-								// outputChannel.appendLine("docInfo: " + JSON.stringify(docInfo, jsonMapReplacer));				
-								VespaStatusResultsPanel.createOrShow(extensionUri, cluster, docInfo,
-									JSON.stringify(status, null, 2), new Date());
-							}).catch(error => {
-								showError("docCounts failed " + error + "\n" + error.stack);
-							})
-					));
-		});
+			.then((_) => {
+				const cluster = vespaConfig.defaultCluster();
+				const timeoutMs = vespaConfig.httpTimeoutMs();
+
+				const statusUrl = `${cluster.configEndpoint}/status`;
+
+				fetchWithTimeout(statusUrl, timeoutMs)
+					.then(statusRes => statusRes.json()
+						.then(status =>
+							VespaV2Metrics.fetchDocInfo(cluster.configEndpoint)
+								.then(docInfo => {
+									// outputChannel.appendLine("docInfo: " + JSON.stringify(docInfo, jsonMapReplacer));				
+									VespaStatusResultsPanel.createOrShow(extensionUri, cluster, docInfo,
+										JSON.stringify(status, null, 2), new Date());
+								}).catch(error => {
+									showError("docCounts failed " + error + "\n" + error.stack);
+								})
+						));
+			});
 
 	}
 
@@ -154,16 +154,16 @@ export class VespaStatusResultsPanel {
 		let result = `<div class="tab-frame">`;
 		result += `
 			<input type="radio" id="status" name="tabs" checked />
-			<label for="status" checked="checked">Vespa Status</label>`;
+			<label for="status" checked="checked">Status</label>`;
 
 		result += `
 			<input type="radio" id="docCountTab" name="tabs" />
-			<label for="docCountTab" checked="checked">Vespa Cluster Documents</label>`;
+			<label for="docCountTab" checked="checked">Document Counts</label>`;
 
 		if (this.clusterConfig) {
 			result += `
 			<input type="radio" id="clusterStatusTab" name="tabs" />
-			<label for="clusterStatusTab">Vespa Cluster Controller Status</label>`;
+			<label for="clusterStatusTab">Controller Status</label>`;
 		}
 
 		const url = new URL(this.clusterConfig.configEndpoint);
@@ -181,16 +181,16 @@ export class VespaStatusResultsPanel {
 
 		result += `<div class="tab">`;
 		const docTypeNames: string[] = this.docInfo.getDocTypeNames();
-			// Mutliple indices
-			result += `<table>`;
-			result += `<tr><th>Vespa Cluster:</th><td>${this.clusterConfig.name}</td></tr>`;
-			result += `<tr><th>Query Endpoint:</th><td>${this.clusterConfig.queryEndpoint}</td></tr>`;
-			result += `<tr><th>Timestamp:</th><td>${new Date(this.timestamp).toISOString().replace("T", " ")}</td></tr>`;
-			result += `</table>`;
-			// result += `<tr><th>YQL:</th><td><pre>${JSON.stringify(this.docCounts, null, 2)}</pre></td></tr>`;
+		// Mutliple indices
+		result += `<table>`;
+		result += `<tr><th>Vespa Cluster:</th><td>${this.clusterConfig.name}</td></tr>`;
+		result += `<tr><th>Query Endpoint:</th><td>${this.clusterConfig.queryEndpoint}</td></tr>`;
+		result += `<tr><th>Timestamp:</th><td>${new Date(this.timestamp).toISOString().replace("T", " ")}</td></tr>`;
+		result += `</table>`;
+		// result += `<tr><th>YQL:</th><td><pre>${JSON.stringify(this.docCounts, null, 2)}</pre></td></tr>`;
 
-			if (docTypeNames.length > 0) {
-				docTypeNames.map(docTypeName => {
+		if (docTypeNames.length > 0) {
+			docTypeNames.map(docTypeName => {
 
 				const docTypeData: VespaDocTypeInfo = this.docInfo.docTypes.get(docTypeName);
 
@@ -206,17 +206,21 @@ export class VespaStatusResultsPanel {
 				result += `<th>Match Rate</th>`;
 				result += `</tr>`;
 
-				// Total
-				result += `<tr>`;
-				result += `<th>Total</th>`;
-				result += `<td>${fmtNum(docTypeData.total.docCount, 2)} (${formatNumber(docTypeData.total.docCount)})</td>`;
-				result += `<td>${fmtBytes(docTypeData.total.memUsageBytes, 2)} (${formatNumber(docTypeData.total.memUsageBytes)})</td>`;
-				result += `<td>${fmtBytes(docTypeData.total.diskUsageBytes, 2)} (${formatNumber(docTypeData.total.diskUsageBytes)})</td>`;
-				result += `<td>${fmtBytes(docTypeData.total.transactionLogUsageBytes, 2)} (${formatNumber(docTypeData.total.transactionLogUsageBytes)})</td>`;
-				result += `<td>${fmtBytes(docTypeData.total.matchRate, 2)} (${formatNumber(docTypeData.total.matchRate)})</td>`;
-				result += `</tr>`;
+				const distKeys = docTypeData.getGroupDistrubutionKeys();
 
-				docTypeData.getGroupDistrubutionKeys().map(distKey => {
+				if (distKeys.length > 1) {
+					// Total
+					result += `<tr>`;
+					result += `<th>Total</th>`;
+					result += `<td>${fmtNum(docTypeData.total.docCount, 2)} (${formatNumber(docTypeData.total.docCount)})</td>`;
+					result += `<td>${fmtBytes(docTypeData.total.memUsageBytes, 2)} (${formatNumber(docTypeData.total.memUsageBytes)})</td>`;
+					result += `<td>${fmtBytes(docTypeData.total.diskUsageBytes, 2)} (${formatNumber(docTypeData.total.diskUsageBytes)})</td>`;
+					result += `<td>${fmtBytes(docTypeData.total.transactionLogUsageBytes, 2)} (${formatNumber(docTypeData.total.transactionLogUsageBytes)})</td>`;
+					result += `<td>${fmtBytes(docTypeData.total.matchRate, 2)} (${formatNumber(docTypeData.total.matchRate)})</td>`;
+					result += `</tr>`;
+				}
+
+				distKeys.map(distKey => {
 					const group: VespaDocInfo = docTypeData.groups.get(distKey);
 					result += `<tr>`;
 					result += `<th>${distKey} / ${group.hostname}</th>`;
@@ -240,7 +244,8 @@ export class VespaStatusResultsPanel {
 		result += `</div>`;
 
 		const confId = vespaConfig.configId ? vespaConfig.configId : "";
-		const clusterStateUrl = `${url.protocol}//${url.hostname}:19050/clustercontroller-status/v1/${confId}`;
+		// const clusterStateUrl = `${url.protocol}//${url.hostname}:19050/clustercontroller-status/v1/${confId}`;
+		const clusterStateUrl = vespaConfig.clusterStateUrl(confId);
 		result += `<div class="tab">`;
 		result += `<button class="button"><a href="${clusterStateUrl}">Open in browser...</a></button>`;
 		result += `<div class="cluster-state"><iframe width="100%" height=1024px" src="${clusterStateUrl}" title="Vespa Cluster State"></iframe></div>`;

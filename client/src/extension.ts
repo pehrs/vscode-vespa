@@ -618,7 +618,7 @@ async function runYqlQuery(context: ExtensionContext, yql: string): Promise<void
 			response.json()
 				.then((data: any) => {
 					outputChannel.appendLine("Got Vespa query response!");
-					if (data.trace && vespaConfig.zipkinEndpoint !== undefined && vespaConfig.zipkinEndpoint.length > 0) {
+					if (data.trace && vespaConfig.zipkinEndpoint() !== undefined && vespaConfig.zipkinEndpoint().length > 0) {
 						uploadTrace2Zipkin(data)
 							.then((zipkinLink: string) => {
 								YqlResultsPanel.createOrShow(context.extensionUri, yql, data, zipkinLink, queryTimestamp);

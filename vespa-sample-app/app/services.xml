@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services version="1.0">
+
+  <admin version="2.0">
+    <configservers>
+      <configserver hostalias="config0"/>
+      <configserver hostalias="config1"/>
+      <configserver hostalias="config2"/>
+    </configservers>
+    <cluster-controllers>
+      <cluster-controller hostalias="config0" jvm-options="-Xms32M -Xmx64M"/>
+      <cluster-controller hostalias="config1" jvm-options="-Xms32M -Xmx64M"/>
+      <cluster-controller hostalias="config2" jvm-options="-Xms32M -Xmx64M"/>
+    </cluster-controllers>
+    <slobroks>
+      <slobrok hostalias="config0"/>
+      <slobrok hostalias="config1"/>
+      <slobrok hostalias="config2"/>
+    </slobroks>
+
+    <adminserver hostalias="config0"/>
+  </admin>
+
+  <container id="query" version="1.0">
+    <search/>
+    <http>
+      <server id="default" port="8080">
+        <!-- <server id="secure" port="8443"> -->
+        <!-- <ssl>
+          <private-key-file>/var/tls/host.key</private-key-file>
+          <certificate-file>/var/tls/host.pem</certificate-file>
+          <ca-certificates-file>/var/tls/ca-vespa.pem</ca-certificates-file>
+          <client-authentication>want</client-authentication>
+        </ssl> -->
+      </server>
+    </http>
+    <nodes>
+      <jvm options="-Xms32M -Xmx128M"/>
+      <node hostalias="query0"/>
+    </nodes>
+  </container>
+
+  <container id="feed" version="1.0">
+    <document-api/>
+    <document-processing/>
+    <http>
+      <server id="default" port="8080">
+        <!-- <server id="secure" port="8443"> -->
+        <!-- <ssl>
+          <private-key-file>/var/tls/host.key</private-key-file>
+          <certificate-file>/var/tls/host.pem</certificate-file>
+          <ca-certificates-file>/var/tls/ca-vespa.pem</ca-certificates-file>
+          <client-authentication>want</client-authentication>
+        </ssl> -->
+      </server>
+    </http>
+    <nodes>
+      <jvm options="-Xms32M -Xmx128M"/>
+      <node hostalias="feed0"/>
+    </nodes>
+  </container>
+
+  <content id="llm" version="1.0">
+    <redundancy>2</redundancy>
+    <documents>
+      <!-- Using multiple doctypes/indices here to make sure we can handle that -->
+      <document type="news" mode="index"/>
+      <document type="books" mode="index"/>
+      <document-processing cluster="feed"/>
+    </documents>
+    <nodes>
+      <node hostalias="content0" distribution-key="0"/>
+      <node hostalias="content1" distribution-key="1"/>
+      <node hostalias="content2" distribution-key="2"/>
+      <node hostalias="content3" distribution-key="3"/>
+    </nodes>
+    <engine>
+      <proton>
+        <resource-limits>
+          <!-- Increasing the limits as my dev-host is running out of disk :-) -->
+          <disk>0.90</disk>
+          <memory>0.8</memory>
+        </resource-limits>
+      </proton>
+    </engine>
+  </content>
+
+</services>

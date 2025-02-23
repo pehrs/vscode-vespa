@@ -2,6 +2,10 @@
 
 All notable changes to the "vscode-vespa" extension will be documented in this file.
 
+## [1.1.6]
+
+- Only show total row if doc count has more than one distribution key
+
 ## [1.1.5]
 
 - Color code json with highlight.js

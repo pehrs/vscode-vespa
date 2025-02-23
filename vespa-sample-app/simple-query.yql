@@ -1,0 +1,7 @@
+{
+    "yql": "select * from books where true limit 10",
+    "trace": {
+        "level": 5,
+        "timestamps": true
+    }
+}
